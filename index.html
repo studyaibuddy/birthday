@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Birthday — Parina Bandariya (Test UI)</title>
+
+  <style>
+    /* === Minimal safe styling (embedded) === */
+    :root{
+      --bg:#FFF8FB;
+      --accent:#FF6B96;
+      --muted:#6b5166;
+      --glass: rgba(255,255,255,0.6);
+      --maxw:1100px;
+      --card-radius:16px;
+    }
+    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,'Poppins',sans-serif;background:linear-gradient(180deg,var(--bg),#F6F2F8);color:#3b2d3b; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
+    .center {display:flex;align-items:center;justify-content:center;}
+    /* Loader visible briefly */
+    #loader {position:fixed;inset:0;display:flex;flex-direction:column;gap:10px;align-items:center;justify-content:center;z-index:9999;color:var(--muted);font-weight:600}
+    /* Welcome */
+    .welcome {position:fixed;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;z-index:50}
+    .welcome-card {max-width:760px;padding:30px;border-radius:24px;background:linear-gradient(180deg,rgba(255,255,255,0.85),rgba(255,255,255,0.7));box-shadow:0 20px 50px rgba(120,80,100,0.08);border:1px solid rgba(255,255,255,0.6)}
+    .welcome h1{font-family:'Dancing Script', cursive; font-size:36px;margin:0 0 8px;color:var(--accent)}
+    .open-btn{margin-top:14px;padding:12px 20px;border-radius:999px;border:none;background:linear-gradient(135deg,var(--accent),#ffb3c9);color:white;font-weight:700;cursor:pointer;box-shadow:0 12px 36px rgba(255,107,150,0.12)}
+    /* App */
+    .app{display:none;padding-bottom:80px;min-height:100vh;position:relative;z-index:10}
+    .topbar{position:sticky;top:10px;background:transparent;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;max-width:var(--maxw);margin:12px auto}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#ffb3c9);display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff}
+    .hero{display:flex;align-items:center;justify-content:center;padding:28px 16px}
+    .hero-card{max-width:920px;width:92%;padding:22px;border-radius:var(--card-radius);background:linear-gradient(180deg,rgba(255,255,255,0.9),rgba(255,255,255,0.78));box-shadow:0 20px 40px rgba(120,80,100,0.06);text-align:center;border:1px solid rgba(255,255,255,0.6)}
+    .hero h2{font-family: 'Dancing Script', cursive;font-size:30px;margin:0;color:#5b2b4a}
+    .sections{max-width:var(--maxw);margin:18px auto;padding:6px 16px}
+    .section-title{font-size:18px;text-align:center;color:#5b3f59;margin:8px 0 12px}
+    /* Story */
+    .story-list{display:grid;gap:12px}
+    .story-item{padding:12px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.95),rgba(255,255,255,0.92));border:1px solid rgba(0,0,0,0.02)}
+    /* Gallery */
+    .polaroid-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(160px,1fr));gap:12px;align-items:start}
+    .polaroid{background:#fff;padding:8px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.06);cursor:pointer;display:flex;flex-direction:column;gap:8px}
+    .polaroid img{width:100%;height:160px;object-fit:cover;border-radius:8px}
+    figcaption{font-size:13px;color:#7e5f78}
+    /* Gift */
+    .gift-wrap{display:flex;flex-direction:column;align-items:center;gap:12px}
+    .gift-box{width:150px;height:120px;position:relative;cursor:pointer;transition:transform .2s}
+    .gift-box .lid{position:absolute;inset:0 0 60px 0;background:linear-gradient(135deg,#ffdfe9,#ffcce0);border-radius:12px 12px 6px 6px}
+    .gift-box .box{position:absolute;left:0;right:0;bottom:0;height:64px;background:linear-gradient(135deg,#fff6f8,#fff1f5);border-radius:6px}
+    .gift-box .ribbon{position:absolute;left:50%;top:12px;transform:translateX(-50%);width:36px;height:36px;background:linear-gradient(135deg,#ff6b96,#ff9abb);border-radius:8px}
+    .surprise{padding:12px;border-radius:12px}
+    /* Buttons */
+    .btn{padding:8px 12px;border-radius:12px;border:none;background:#fff;cursor:pointer}
+    .btn.primary{background:linear-gradient(135deg,var(--accent),#ffb3c9);color:#fff;font-weight:700}
+    .big-btn{padding:12px 18px;border-radius:999px;background:linear-gradient(135deg,#ff9fb9,#ffd9e8);border:none;cursor:pointer;font-weight:700}
+    .toast{padding:10px;border-radius:10px;background:#fff;box-shadow:0 8px 20px rgba(0,0,0,0.06);display:inline-block}
+    /* Lightbox */
+    .lightbox{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:9999;padding:12px}
+    .lightbox img{max-width:92%;max-height:86vh;border-radius:10px}
+    .lightbox .close{position:absolute;right:18px;top:18px;background:transparent;border:none;color:#fff;font-size:20px;cursor:pointer}
+    /* Secret letter */
+    .secret-letter{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);z-index:9999}
+    .paper{background:linear-gradient(180deg,#FFF9F5,#FFF7F1);padding:18px;border-radius:12px;max-width:720px}
+    .handwritten{font-family: 'Dancing Script', cursive;font-size:18px;color:#3b2d3b}
+    /* Confetti pieces (DOM) */
+    .confetti-piece{position:fixed;pointer-events:none;border-radius:2px;z-index:10000}
+    /* Responsive */
+    @media (max-width:600px){ .hero h2{font-size:24px} .polaroid img{height:130px} .gift-box{width:120px;height:100px} }
+  </style>
+</head>
+<body>
+  <!-- Loader -->
+  <div id="loader">Preparing a little surprise for Parina…</div>
+
+  <!-- Welcome -->
+  <main class="welcome" id="welcome" role="main" aria-labelledby="welcomeTitle">
+    <div class="welcome-card center">
+      <div style="max-width:640px;">
+        <h1 id="welcomeTitle">Open Your Birthday Surprise</h1>
+        <p style="color:#6f566a;margin-top:6px">A small digital gift, made with love.</p>
+        <div style="margin-top:18px" class="center">
+          <button id="openBtn" class="open-btn">✨ Open Your Birthday Surprise ✨</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- App -->
+  <div id="app" class="app" role="application" aria-hidden="true">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">🎀</div>
+        <div class="title">A Gift for <strong id="friendName">Parina Bandariya</strong></div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <button id="heartSecretBtn" title="Open secret letter">💖</button>
+        <div style="display:flex;align-items:center;gap:8px">
+          <button id="playPauseBtn" title="Play/pause music">▶️</button>
+          <input id="volume" type="range" min="0" max="1" step="0.01" value="0.6" aria-label="Volume">
+        </div>
+      </div>
+    </header>
+
+    <section id="hero" class="hero">
+      <div class="hero-card">
+        <h2>Happy Birthday, <span id="heroName">Parina Bandariya</span> ❤️</h2>
+        <p style="color:#6f566a">Open, read, and enjoy — made just for you.</p>
+        <div style="margin-top:12px;display:flex;gap:10px;justify-content:center">
+          <button id="celebrateBtn" class="btn primary">Celebrate Now 🎉</button>
+          <button id="galleryJump" class="btn">View Memories</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="sections">
+      <section id="story"><h3 class="section-title">Our Story</h3>
+        <div class="story-list">
+          <div class="story-item" data-text="We met and instantly clicked — every memory since is brighter with you."><p class="typewriter"></p></div>
+          <div class="story-item" data-text="You bring laughter, courage, and warmth into the lives of everyone around you."><p class="typewriter"></p></div>
+          <div class="story-item" data-text="Thank you for being a true friend — today we celebrate you and everything you are."><p class="typewriter"></p></div>
+        </div>
+      </section>
+
+      <section id="gallery" style="margin-top:20px"><h3 class="section-title">Memory Gallery</h3>
+        <div class="polaroid-grid" role="list">
+          <!-- Replace these file names in assets/ with your real photos -->
+          <figure class="polaroid" tabindex="0" role="listitem">
+            <img src="assets/photo1.jpg" alt="Photo 1">
+            <figcaption>Sweet selfie</figcaption>
+          </figure>
+
+          <figure class="polaroid" tabindex="0" role="listitem">
+            <img src="assets/photo2.jpg" alt="Photo 2">
+            <figcaption>Back in the sunshine</figcaption>
+          </figure>
+
+          <figure class="polaroid" tabindex="0" role="listitem">
+            <img src="assets/photo3.jpg" alt="Photo 3">
+            <figcaption>Mischievous moment</figcaption>
+          </figure>
+
+          <figure class="polaroid" tabindex="0" role="listitem">
+            <img src="assets/photo4.jpg" alt="Photo 4">
+            <figcaption>Festival smile</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section id="reasons" style="margin-top:20px"><h3 class="section-title">Reasons You're Amazing</h3>
+        <div class="reasons-grid" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+          <div class="reason-card" style="padding:12px;border-radius:10px;background:#fff">Your smile brightens the day.</div>
+          <div class="reason-card" style="padding:12px;border-radius:10px;background:#fff">You make people feel at home.</div>
+          <div class="reason-card" style="padding:12px;border-radius:10px;background:#fff">You turn moments into memories.</div>
+          <div class="reason-card" style="padding:12px;border-radius:10px;background:#fff">You are beautifully kind and brave.</div>
+        </div>
+      </section>
+
+      <section id="gift" style="margin-top:20px">
+        <h3 class="section-title">A Little Box of Joy</h3>
+        <div class="gift-wrap">
+          <div id="giftBox" class="gift-box" role="button" tabindex="0" aria-label="Open gift box">
+            <div class="lid"></div><div class="box"></div><div class="ribbon"></div>
+          </div>
+          <div id="giftReveal" class="surprise glass hidden" style="margin-top:8px; display:none">
+            <h4 style="margin:0">Surprise!</h4>
+            <p id="surpriseText" style="margin:6px 0">Parina — you're my shining star. Wishing you a year of joy.</p>
+            <button id="giftClose" class="btn">Close</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="smile" style="margin-top:20px">
+        <h3 class="section-title">Click for a Smile</h3>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+          <button id="smileBtn" class="big-btn">Click for a Smile 😊</button>
+          <div id="smileToast" class="toast hidden" role="status" aria-live="polite" style="display:none"></div>
+        </div>
+      </section>
+
+      <section id="finale" style="margin-top:20px">
+        <h3 class="section-title">Finale</h3>
+        <div style="text-align:center;margin-bottom:36px">
+          <button id="finaleBtn" class="btn primary">Celebrate 🎆</button>
+        </div>
+      </section>
+    </div>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox" role="dialog" aria-hidden="true">
+      <button class="close" id="lightboxClose">✕</button>
+      <img id="lightboxImg" src="" alt="">
+      <p id="lightboxCaption" style="color:#fff;margin-top:8px"></p>
+    </div>
+
+    <!-- Secret letter -->
+    <div id="secretLetter" class="secret-letter" role="dialog" aria-hidden="true">
+      <div class="paper">
+        <button id="closeLetter" class="close" style="position:absolute;right:18px;top:18px;background:transparent;border:none;font-size:20px;color:#6b5166">✕</button>
+        <h4 class="handwritten" style="margin-top:2px">To my dearest Parina,</h4>
+        <p style="margin:8px 0">Every memory with you is a treasure — I hope this little gift brings a smile to your face today.</p>
+      </div>
+    </div>
+
+    <!-- Confetti root (dom confetti pieces appended here) -->
+    <div id="confetti"></div>
+
+    <!-- Optional audio files (won't break if missing) -->
+    <audio id="bgAudio" loop preload="auto" src="assets/ambient.mp3"></audio>
+    <audio id="openSfx" src="assets/open.mp3"></audio>
+  </div>
+
+  <script>
+    // ===== Minimal robust script (no external dependencies) =====
+    document.addEventListener('DOMContentLoaded', function(){
+      const loader = document.getElementById('loader');
+      const welcome = document.getElementById('welcome');
+      const openBtn = document.getElementById('openBtn');
+      const app = document.getElementById('app');
+      const playPauseBtn = document.getElementById('playPauseBtn');
+      const bgAudio = document.getElementById('bgAudio');
+      const volume = document.getElementById('volume');
+      const polaroids = document.querySelectorAll('.polaroid');
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightboxImg');
+      const lightboxClose = document.getElementById('lightboxClose');
+      const giftBox = document.getElementById('giftBox');
+      const giftReveal = document.getElementById('giftReveal');
+      const giftClose = document.getElementById('giftClose');
+      const smileBtn = document.getElementById('smileBtn');
+      const smileToast = document.getElementById('smileToast');
+      const heartBtn = document.getElementById('heartSecretBtn');
+      const secretLetter = document.getElementById('secretLetter');
+      const closeLetter = document.getElementById('closeLetter');
+      const finaleBtn = document.getElementById('finaleBtn');
+
+      // remove loader quickly
+      setTimeout(()=> loader && loader.remove(), 300);
+
+      // Open app
+      openBtn && openBtn.addEventListener('click', async () => {
+        try { bgAudio && await bgAudio.play().catch(()=>{}); } catch(e){}
+        welcome.style.display = 'none';
+        app.style.display = 'block';
+        app.setAttribute('aria-hidden','false');
+        confettiBurst(36);
+        document.getElementById('hero') && document.getElementById('hero').scrollIntoView({behavior:'smooth'});
+      });
+
+      // audio controls (safe if audio file missing)
+      playPauseBtn && playPauseBtn.addEventListener('click', () => {
+        if(!bgAudio) return;
+        if(bgAudio.paused){ bgAudio.play().catch(()=>{}); playPauseBtn.textContent = '⏸️'; }
+        else { bgAudio.pause(); playPauseBtn.textContent = '▶️'; }
+      });
+      volume && volume.addEventListener('input', (e)=> { if(bgAudio) bgAudio.volume = parseFloat(e.target.value); });
+
+      // polaroid -> lightbox
+      polaroids.forEach(p => {
+        p.addEventListener('click', () => {
+          const img = p.querySelector('img');
+          if(!img) return;
+          lightboxImg.src = img.src;
+          lightbox.style.display = 'flex';
+          lightbox.setAttribute('aria-hidden','false');
+        });
+        p.addEventListener('keydown', (ev) => { if(ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); p.click(); }});
+      });
+      lightboxClose && lightboxClose.addEventListener('click', closeLightbox);
+      lightbox && lightbox.addEventListener('click', (e) => { if(e.target === lightbox) closeLightbox(); });
+      function closeLightbox(){ lightbox.style.display = 'none'; lightbox.setAttribute('aria-hidden','true'); lightboxImg.src = ''; }
+
+      // gift
+      giftBox && giftBox.addEventListener('click', async () => {
+        giftBox.style.transform = 'translateY(-6px) scale(1.02)';
+        try { document.getElementById('openSfx') && (document.getElementById('openSfx').currentTime = 0, document.getElementById('openSfx').play().catch(()=>{})); } catch(e){}
+        confettiBurst(120);
+        await new Promise(r => setTimeout(r, 600));
+        if (giftReveal) { giftReveal.style.display = 'block'; giftReveal.setAttribute('aria-hidden','false'); }
+      });
+      giftClose && giftClose.addEventListener('click', () => {
+        if (giftReveal) { giftReveal.style.display = 'none'; giftReveal.setAttribute('aria-hidden','true'); }
+        giftBox.style.transform = '';
+      });
+
+      // smile
+      const compliments = ["You light up the room.", "Your laugh is my favorite sound.", "You are loved more than you know.", "You are brave and beautiful."];
+      smileBtn && smileBtn.addEventListener('click', () => {
+        const msg = compliments[Math.floor(Math.random()*compliments.length)];
+        if (smileToast) {
+          smileToast.textContent = msg;
+          smileToast.style.display = 'inline-block';
+          setTimeout(()=> smileToast.style.display = 'none', 3200);
+        }
+      });
+
+      // secret letter
+      const heartOpenBtn = document.getElementById('heartSecretBtn');
+      heartOpenBtn && heartOpenBtn.addEventListener('click', () => {
+        if (secretLetter) { secretLetter.style.display = 'flex'; secretLetter.setAttribute('aria-hidden','false'); }
+      });
+      closeLetter && closeLetter.addEventListener('click', () => {
+        if (secretLetter) { secretLetter.style.display = 'none'; secretLetter.setAttribute('aria-hidden','true'); }
+      });
+
+      // finale
+      finaleBtn && finaleBtn.addEventListener('click', () => {
+        confettiBurst(260);
+      });
+
+      // keyboard escape
+      document.addEventListener('keydown', (e) => {
+        if(e.key === 'Escape') { closeLightbox(); if (secretLetter) secretLetter.style.display = 'none'; }
+      });
+
+      // simple DOM confetti (no canvas) — safe and visible
+      function confettiBurst(count=80){
+        for(let i=0;i<count;i++){
+          const el = document.createElement('div');
+          el.className = 'confetti-piece';
+          el.style.left = (50 + (Math.random()-0.5)*60) + '%';
+          el.style.top = (20 + (Math.random()-0.5)*30) + '%';
+          el.style.width = (6 + Math.random()*10) + 'px';
+          el.style.height = (6 + Math.random()*10) + 'px';
+          el.style.background = ['#FF6B96','#FFD59A','#EADFF9','#FFF6EA','#FFB3C9'][Math.floor(Math.random()*5)];
+          document.body.appendChild(el);
+          const tx = (Math.random()-0.5)*300;
+          const ty = 300 + Math.random()*400;
+          const rot = (Math.random()-0.5)*720;
+          el.animate([
+            { transform: 'translate(0,0) rotate(0deg)', opacity:1 },
+            { transform: `translate(${tx}px, ${ty}px) rotate(${rot}deg)`, opacity:0 }
+          ], { duration: 1400 + Math.random()*1000, easing: 'cubic-bezier(.2,.8,.2,1)' });
+          setTimeout(()=> el.remove(), 2600);
+        }
+      }
+
+      // typewriter on scroll for story items
+      const storyItems = document.querySelectorAll('.story-item');
+      const obs = new IntersectionObserver((entries, o) => {
+        entries.forEach(entry => {
+          if(entry.isIntersecting){
+            const dest = entry.target.querySelector('.typewriter');
+            const text = entry.target.getAttribute('data-text') || '';
+            if(dest && !dest.dataset.typed){
+              let i=0;
+              const timer = setInterval(()=> {
+                dest.textContent += text.charAt(i) || '';
+                i++;
+                if(i>text.length) clearInterval(timer);
+              }, 28);
+              dest.dataset.typed = '1';
+            }
+            o.unobserve(entry.target);
+          }
+        });
+      }, {threshold:0.4});
+      storyItems.forEach(it => obs.observe(it));
+    });
+  </script>
+</body>
+</html>
