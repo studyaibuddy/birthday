@@ -227,6 +227,8 @@
       const secretLetter = document.getElementById('secretLetter');
       const closeLetter = document.getElementById('closeLetter');
       const finaleBtn = document.getElementById('finaleBtn');
+      const celebrateBtn = document.getElementById('celebrateBtn');
+      const galleryJump = document.getElementById('galleryJump');
 
       // remove loader quickly
       setTimeout(()=> loader && loader.remove(), 300);
@@ -359,6 +361,18 @@
       });
       giftClose && giftClose.addEventListener('click', () => { if (giftReveal) { giftReveal.style.display = 'none'; giftReveal.setAttribute('aria-hidden','true'); } giftBox.style.transform = ''; });
 
+      // Celebrate Now button (fix: ensure it works)
+      celebrateBtn && celebrateBtn.addEventListener('click', () => {
+        confettiBurst(260);
+        playOpenSfx();
+      });
+
+      // View Memories button -> scroll to gallery
+      galleryJump && galleryJump.addEventListener('click', () => {
+        const gallery = document.getElementById('gallery');
+        if(gallery) gallery.scrollIntoView({behavior:'smooth'});
+      });
+
       // smile
       const compliments = ["You light up the room.", "Your laugh is my favorite sound.", "You are loved more than you know.", "You are brave and beautiful."];
       smileBtn && smileBtn.addEventListener('click', () => {
@@ -406,9 +420,25 @@
 
       // typewriter on scroll for story items
       const storyItems = document.querySelectorAll('.story-item');
-      const obs = new IntersectionObserver((entries, o) => { entries.forEach(entry => { if(entry.isIntersecting){ const dest = entry.target.querySelector('.typewriter'); const text = entry.target.getAttribute('data-text') || ''; if(dest && !dest.dataset.typed){ let i=0; const timer = setInterval(()=> { dest.textContent += text.charAt(i) || ''; i++; if(i>text.length) clearInterval(timer); }, 28); dest.dataset.typed = '1'; } o.unobserve(entry.target); } }); }, {threshold:0.4});
+      const obs = new IntersectionObserver((entries, o) => {
+        entries.forEach(entry => {
+          if(entry.isIntersecting){
+            const dest = entry.target.querySelector('.typewriter');
+            const text = entry.target.getAttribute('data-text') || '';
+            if(dest && !dest.dataset.typed){
+              let i=0;
+              const timer = setInterval(()=> {
+                dest.textContent += text.charAt(i) || '';
+                i++;
+                if(i>text.length) clearInterval(timer);
+              }, 28);
+              dest.dataset.typed = '1';
+            }
+            o.unobserve(entry.target);
+          }
+        });
+      }, {threshold:0.4});
       storyItems.forEach(it => obs.observe(it));
-
     });
   </script>
 </body>
