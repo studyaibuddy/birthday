@@ -4,514 +4,189 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Birthday — Parina Bandariya (Gift)</title>
-
   <style>
-    :root{
-      --bg:#FFF8FB;
-      --card:#fff;
-      --accent:#FF6B96;
-      --accent-2:#FF9ABB;
-      --muted:#6b5166;
-      --glass: rgba(255,255,255,0.7);
-      --maxw:1100px;
-      --card-radius:16px;
-      --text:#3b2d3b;
-    }
+    :root{--bg:#FFF8FB;--card:#fff;--accent:#FF6B96;--accent-2:#FF9ABB;--muted:#6b5166;--maxw:1100px;--card-radius:16px;--text:#3b2d3b}
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,'Poppins',sans-serif;background:linear-gradient(180deg,var(--bg),#F6F2F8);color:var(--text); -webkit-font-smoothing:antialiased}
-    a{color:inherit}
-
-    .center {display:flex;align-items:center;justify-content:center}
-    /* Layout */
-    header.topbar{position:sticky;top:12px;background:transparent;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;max-width:var(--maxw);margin:12px auto}
+    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,'Poppins',sans-serif;background:linear-gradient(180deg,var(--bg),#F6F2F8);color:var(--text);-webkit-font-smoothing:antialiased}
+    .center{display:flex;align-items:center;justify-content:center}
+    header.topbar{position:sticky;top:12px;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;max-width:var(--maxw);margin:12px auto}
     .brand{display:flex;align-items:center;gap:12px}
     .logo{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff}
     .title{font-weight:700}
-    .controls{display:flex;gap:8px;align-items:center}
     .btn{padding:8px 12px;border-radius:10px;border:none;background:#fff;cursor:pointer}
     .btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;font-weight:700}
-
     .container{max-width:var(--maxw);margin:14px auto;padding:10px}
     .hero-card{padding:22px;border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,0.95),rgba(255,255,255,0.88));box-shadow:0 18px 40px rgba(120,80,100,0.06);text-align:center}
-    .hero h2{font-family: 'Dancing Script', cursive;font-size:32px;margin:0;color:#5b2b4a}
-    .hero p{margin:8px 0;color:var(--muted)}
-
+    .hero h2{font-family:'Dancing Script',cursive;font-size:32px;margin:0;color:#5b2b4a}
     .sections{margin-top:18px}
-    .section{margin-bottom:18px}
     .section-title{font-size:18px;text-align:center;color:#5b3f59;margin:8px 0 12px}
-
-    /* Story */
-    .story-list{display:grid;gap:12px}
-    .story-item{padding:14px;border-radius:12px;background:var(--card);border:1px solid rgba(0,0,0,0.04)}
-
-    /* Gallery */
-    .polaroid-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(160px,1fr));gap:12px;align-items:start}
-    .polaroid{background:var(--card);padding:8px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.06);cursor:pointer;display:flex;flex-direction:column;gap:8px}
+    .polaroid-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+    .polaroid{background:var(--card);padding:8px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.06)}
     .polaroid img{width:100%;height:160px;object-fit:cover;border-radius:8px}
-    figcaption{font-size:13px;color:#7e5f78}
-
-    /* Lightbox */
-    .lightbox{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.66);z-index:9999;padding:12px}
-    .lightbox[aria-hidden="false"]{display:flex}
-    .lightbox img{max-width:92%;max-height:86vh;border-radius:10px;box-shadow:0 18px 60px rgba(0,0,0,0.6)}
-    .lightbox .close{position:absolute;right:18px;top:18px;background:transparent;border:none;color:#fff;font-size:22px;cursor:pointer}
-    .lightbox .meta{position:absolute;bottom:28px;color:#fff;font-size:14px}
-
-    /* Gift */
     .gift-wrap{display:flex;flex-direction:column;align-items:center;gap:12px}
-    .gift-box{width:150px;height:120px;position:relative;cursor:pointer;transition:transform .24s ease, box-shadow .24s ease}
-    .gift-box:hover{transform:translateY(-6px)}
-    .gift-box .lid{position:absolute;inset:0 0 60px 0;background:linear-gradient(135deg,#ffdfe9,#ffcce0);border-radius:12px 12px 6px 6px}
-    .gift-box .box{position:absolute;left:0;right:0;bottom:0;height:64px;background:linear-gradient(135deg,#fff6f8,#fff1f5);border-radius:6px}
-    .gift-box .ribbon{position:absolute;left:50%;top:12px;transform:translateX(-50%);width:36px;height:36px;background:linear-gradient(135deg,#ff6b96,#ff9abb);border-radius:8px}
-    .surprise{padding:12px;border-radius:12px;background:var(--card);box-shadow:0 12px 30px rgba(0,0,0,0.04)}
-
-    /* Toast */
-    .toast{padding:10px;border-radius:10px;background:var(--card);box-shadow:0 8px 20px rgba(0,0,0,0.06);display:inline-block}
-
-    /* Confetti pieces (DOM) */
+    .gift-box{width:150px;height:120px;position:relative;cursor:pointer}
     .confetti-piece{position:fixed;pointer-events:none;border-radius:2px;z-index:10000}
-
-    /* Footer controls */
-    .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center;margin-top:8px}
-
-    /* Responsive */
-    @media (max-width:680px){ .hero h2{font-size:24px} .polaroid img{height:130px} .gift-box{width:120px;height:100px} }
-
-    /* small utilities */
-    .hidden{display:none}
-    input[type=file]{display:none}
-    .muted{opacity:.7;font-size:13px}
-    .badge{background:linear-gradient(135deg,#fff,#fff6);padding:6px 8px;border-radius:8px;font-size:13px}
+    .welcome{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;z-index:50;background:linear-gradient(180deg,rgba(255,255,255,0.9),rgba(255,255,255,0.7))}
+    .welcome-card{max-width:760px;padding:30px;border-radius:24px;background:linear-gradient(180deg,rgba(255,255,255,0.98),rgba(255,255,255,0.95));box-shadow:0 20px 50px rgba(120,80,100,0.08);}
+    @media (max-width:680px){.hero h2{font-size:24px}.polaroid img{height:130px}.gift-box{width:120px;height:100px}}
   </style>
 </head>
 <body>
-  <div id="loader" class="center" style="position:fixed;inset:0;z-index:9999;background:linear-gradient(180deg,var(--bg),#F6F2F8);">Preparing a little surprise…</div>
-
-  <header class="topbar" role="banner">
-    <div class="brand">
-      <div class="logo" aria-hidden>🎀</div>
-      <div>
-        <div class="title">A Gift for <strong id="friendName">Parina Bandariya</strong></div>
-        <div class="muted" style="font-size:12px">Made with care — no servers, fully client-side</div>
+  <!-- Welcome overlay (restored) -->
+  <main id="welcome" class="welcome" role="main" aria-labelledby="welcomeTitle">
+    <div class="welcome-card center">
+      <div style="max-width:640px">
+        <h1 id="welcomeTitle" style="font-family:'Dancing Script',cursive;font-size:36px;margin:0 0 8px;color:var(--accent)">Open Your Birthday Surprise</h1>
+        <p style="color:#6f566a;margin-top:6px">A small digital gift, made with love.</p>
+        <div style="margin-top:18px" class="center">
+          <button id="openBtn" class="btn primary">✨ Open Your Birthday Surprise ✨</button>
+        </div>
       </div>
     </div>
+  </main>
 
-    <div class="controls">
-      <button id="themeToggle" class="btn" title="Toggle theme">🌓</button>
-      <button id="fullscreenBtn" class="btn" title="Toggle fullscreen">⛶</button>
-      <button id="heartSecretBtn" class="btn" title="Open secret letter">💌</button>
-      <div style="display:flex;align-items:center;gap:6px">
-        <button id="playPauseBtn" class="btn" title="Play/pause music">▶️</button>
+  <!-- App (hidden until open) -->
+  <div id="app" class="container" role="application" aria-hidden="true" style="display:none">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">🎀</div>
+        <div class="title">A Gift for <strong id="friendName">Parina Bandariya</strong></div>
       </div>
-      <div style="display:flex;align-items:center;gap:6px">
+      <div style="display:flex;gap:8px;align-items:center">
+        <button id="playPauseBtn" class="btn" title="Play/pause music">▶️</button>
         <input id="volume" type="range" min="0" max="1" step="0.01" value="0.6" aria-label="Volume">
       </div>
-    </div>
-  </header>
+    </header>
 
-  <main class="container" role="main">
-    <section class="hero section">
+    <section class="hero">
       <div class="hero-card">
-        <h2 id="heroHeading">Happy Birthday, <span id="heroName">Parina Bandariya</span> ❤️</h2>
-        <p class="muted">Open, read, and enjoy — made just for you. Tip: you can customize the name and secret letter below; changes are saved locally.</p>
-        <div style="margin-top:12px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-          <button id="openBtn" class="btn primary">✨ Open Your Birthday Surprise ✨</button>
-          <button id="celebrateBtn" class="btn">Celebrate Now 🎉</button>
+        <h2>Happy Birthday, <span id="heroName">Parina Bandariya</span> ❤️</h2>
+        <p style="color:#6f566a">Open, read, and enjoy — made just for you.</p>
+        <div style="margin-top:12px;display:flex;gap:10px;justify-content:center">
+          <button id="celebrateBtn" class="btn primary">Celebrate Now 🎉</button>
           <button id="galleryJump" class="btn">View Memories</button>
-        </div>
-        <div class="toolbar" style="margin-top:12px;">
-          <label class="badge">Recipient: <input id="editName" style="border:none;background:transparent;font-weight:700;margin-left:6px" aria-label="Edit recipient name"></label>
-          <label class="badge" for="fileInput">Add photos</label>
-          <button id="downloadAll" class="btn" title="Download image currently open">⬇️ Download</button>
         </div>
       </div>
     </section>
 
     <div class="sections">
-      <section id="story" class="section" aria-labelledby="storyTitle"><h3 id="storyTitle" class="section-title">Our Story</h3>
+      <section id="story"><h3 class="section-title">Our Story</h3>
         <div class="story-list">
-          <div class="story-item" data-text="We met and instantly clicked — every memory since is brighter with you."><p class="typewriter" aria-live="polite"></p></div>
-          <div class="story-item" data-text="You bring laughter, courage, and warmth into the lives of everyone around you."><p class="typewriter" aria-live="polite"></p></div>
-          <div class="story-item" data-text="Thank you for being a true friend — today we celebrate you and everything you are."><p class="typewriter" aria-live="polite"></p></div>
+          <div class="story-item" data-text="We met and instantly clicked — every memory since is brighter with you."><p class="typewriter"></p></div>
+          <div class="story-item" data-text="You bring laughter, courage, and warmth into the lives of everyone around you."><p class="typewriter"></p></div>
+          <div class="story-item" data-text="Thank you for being a true friend — today we celebrate you and everything you are."><p class="typewriter"></p></div>
         </div>
       </section>
 
-      <section id="gallery" class="section" aria-labelledby="galleryTitle"><h3 id="galleryTitle" class="section-title">Memory Gallery</h3>
-        <div style="display:flex;gap:10px;align-items:center;justify-content:center;margin-bottom:8px">
-          <input id="fileInput" type="file" accept="image/*" multiple aria-label="Add photos to gallery">
-          <button id="addSamplePhotos" class="btn">Add sample photos</button>
-        </div>
-        <div id="polaroidGrid" class="polaroid-grid" role="list">
-          <!-- default placeholders (user should replace assets/* with real photos in the repo) -->
-        </div>
-      </section>
-
-      <section id="reasons" class="section"><h3 class="section-title">Reasons You're Amazing</h3>
-        <div class="reasons-grid" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
-          <div class="reason-card" style="padding:12px;border-radius:10px;background:var(--card)">Your smile brightens the day.</div>
-          <div class="reason-card" style="padding:12px;border-radius:10px;background:var(--card)">You make people feel at home.</div>
-          <div class="reason-card" style="padding:12px;border-radius:10px;background:var(--card)">You turn moments into memories.</div>
-          <div class="reason-card" style="padding:12px;border-radius:10px;background:var(--card)">You are beautifully kind and brave.</div>
+      <section id="gallery" style="margin-top:20px"><h3 class="section-title">Memory Gallery</h3>
+        <div class="polaroid-grid" role="list">
+          <figure class="polaroid" tabindex="0" role="listitem"><img src="assets/photo1.jpg" alt="Photo 1"><figcaption>Sweet selfie</figcaption></figure>
+          <figure class="polaroid" tabindex="0" role="listitem"><img src="assets/photo2.jpg" alt="Photo 2"><figcaption>Back in the sunshine</figcaption></figure>
+          <figure class="polaroid" tabindex="0" role="listitem"><img src="assets/photo3.jpg" alt="Photo 3"><figcaption>Mischievous moment</figcaption></figure>
+          <figure class="polaroid" tabindex="0" role="listitem"><img src="assets/photo4.jpg" alt="Photo 4"><figcaption>Festival smile</figcaption></figure>
         </div>
       </section>
 
-      <section id="gift" class="section"><h3 class="section-title">A Little Box of Joy</h3>
+      <section id="reasons" style="margin-top:20px"><h3 class="section-title">Reasons You're Amazing</h3>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+          <div style="padding:12px;border-radius:10px;background:var(--card)">Your smile brightens the day.</div>
+          <div style="padding:12px;border-radius:10px;background:var(--card)">You make people feel at home.</div>
+          <div style="padding:12px;border-radius:10px;background:var(--card)">You turn moments into memories.</div>
+          <div style="padding:12px;border-radius:10px;background:var(--card)">You are beautifully kind and brave.</div>
+        </div>
+      </section>
+
+      <section id="gift" style="margin-top:20px"><h3 class="section-title">A Little Box of Joy</h3>
         <div class="gift-wrap">
-          <div id="giftBox" class="gift-box" role="button" tabindex="0" aria-label="Open gift box">
-            <div class="lid" aria-hidden></div><div class="box" aria-hidden></div><div class="ribbon" aria-hidden></div>
-          </div>
-          <div id="giftReveal" class="surprise hidden" style="margin-top:8px; display:none" aria-hidden="true">
-            <h4 style="margin:0">Surprise!</h4>
-            <p id="surpriseText" style="margin:6px 0">Parina — you're my shining star. Wishing you a year of joy.</p>
-            <div style="display:flex;gap:8px;justify-content:center;margin-top:8px">
-              <button id="giftClose" class="btn">Close</button>
-              <button id="sendHeart" class="btn primary">Send a Heart ❤️</button>
-            </div>
-          </div>
+          <div id="giftBox" class="gift-box" role="button" tabindex="0" aria-label="Open gift box"><div class="lid"></div><div class="box"></div><div class="ribbon"></div></div>
+          <div id="giftReveal" style="margin-top:8px;display:none" aria-hidden="true"><h4 style="margin:0">Surprise!</h4><p id="surpriseText" style="margin:6px 0">Parina — you're my shining star. Wishing you a year of joy.</p><button id="giftClose" class="btn">Close</button></div>
         </div>
       </section>
 
-      <section id="smile" class="section"><h3 class="section-title">Click for a Smile</h3>
-        <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
-          <button id="smileBtn" class="btn primary">Click for a Smile 😊</button>
-          <div id="smileToast" class="toast hidden" role="status" aria-live="polite" style="display:none"></div>
-        </div>
-      </section>
-
-      <section id="finale" class="section"><h3 class="section-title">Finale</h3>
+      <section id="finale" style="margin-top:20px"><h3 class="section-title">Finale</h3>
         <div style="text-align:center;margin-bottom:36px">
           <button id="finaleBtn" class="btn primary">Celebrate 🎆</button>
-          <div style="margin-top:8px" class="muted">Confetti intensity: <input id="confettiCount" type="range" min="20" max="600" value="140"></div>
+          <div style="margin-top:8px" class="muted">Confetti intensity is set to full</div>
         </div>
       </section>
     </div>
-  </main>
+  </div>
 
   <!-- Lightbox -->
-  <div id="lightbox" class="lightbox" role="dialog" aria-hidden="true">
-    <button class="close" id="lightboxClose" aria-label="Close">✕</button>
-    <img id="lightboxImg" src="" alt="">
-    <div class="meta" id="lightboxCaption"></div>
+  <div id="lightbox" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.66);z-index:9999;padding:12px" role="dialog" aria-hidden="true">
+    <button id="lightboxClose" style="position:absolute;right:18px;top:18px;background:transparent;border:none;color:#fff;font-size:22px;cursor:pointer">✕</button>
+    <img id="lightboxImg" src="" alt="" style="max-width:92%;max-height:86vh;border-radius:10px;box-shadow:0 18px 60px rgba(0,0,0,0.6)">
   </div>
 
-  <!-- Secret letter -->
-  <div id="secretLetter" class="secret-letter" role="dialog" aria-hidden="true" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);z-index:9999">
-    <div class="paper" style="background:linear-gradient(180deg,#FFF9F5,#FFF7F1);padding:18px;border-radius:12px;max-width:720px;position:relative">
-      <button id="closeLetter" class="close" style="position:absolute;right:18px;top:18px;background:transparent;border:none;font-size:20px;color:#6b5166">✕</button>
-      <h4 style="margin-top:2px">To my dearest <input id="letterName" style="border:none;background:transparent;font-weight:700"></h4>
-      <textarea id="letterText" style="width:100%;min-height:100px;border-radius:8px;padding:10px;margin-top:8px">Every memory with you is a treasure — I hope this little gift brings a smile to your face today.</textarea>
-      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
-        <button id="saveLetter" class="btn primary">Save</button>
-        <button id="closeLetter2" class="btn">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Confetti root (dom confetti pieces appended here) -->
-  <div id="confetti"></div>
+  <!-- Background audio (expects assets/deja_vu.mp3) -->
+  <audio id="bgAudio" loop preload="auto" src="assets/deja_vu.mp3"></audio>
 
   <script>
-    (function(){
-      // Elements
-      const loader = document.getElementById('loader');
+    document.addEventListener('DOMContentLoaded', function(){
+      const welcome = document.getElementById('welcome');
       const openBtn = document.getElementById('openBtn');
-      const appContainer = document.querySelector('.container');
+      const app = document.getElementById('app');
       const playPauseBtn = document.getElementById('playPauseBtn');
+      const bgAudio = document.getElementById('bgAudio');
       const volume = document.getElementById('volume');
-      const polaroidGrid = document.getElementById('polaroidGrid');
+      const polaroids = document.querySelectorAll('.polaroid');
       const lightbox = document.getElementById('lightbox');
       const lightboxImg = document.getElementById('lightboxImg');
       const lightboxClose = document.getElementById('lightboxClose');
-      const lightboxCaption = document.getElementById('lightboxCaption');
       const giftBox = document.getElementById('giftBox');
       const giftReveal = document.getElementById('giftReveal');
       const giftClose = document.getElementById('giftClose');
-      const smileBtn = document.getElementById('smileBtn');
-      const smileToast = document.getElementById('smileToast');
-      const heartBtn = document.getElementById('heartSecretBtn');
-      const secretLetter = document.getElementById('secretLetter');
-      const closeLetter = document.getElementById('closeLetter');
-      const closeLetter2 = document.getElementById('closeLetter2');
-      const saveLetter = document.getElementById('saveLetter');
-      const letterText = document.getElementById('letterText');
-      const letterName = document.getElementById('letterName');
-      const friendNameEl = document.getElementById('friendName');
-      const heroNameEl = document.getElementById('heroName');
-      const editName = document.getElementById('editName');
-      const addSamplePhotos = document.getElementById('addSamplePhotos');
-      const fileInput = document.getElementById('fileInput');
       const celebrateBtn = document.getElementById('celebrateBtn');
-      const galleryJump = document.getElementById('galleryJump');
       const finaleBtn = document.getElementById('finaleBtn');
-      const confettiCountInput = document.getElementById('confettiCount');
-      const downloadAll = document.getElementById('downloadAll');
-      const themeToggle = document.getElementById('themeToggle');
-      const fullscreenBtn = document.getElementById('fullscreenBtn');
 
-      // small utilities
-      function $(sel){return document.querySelector(sel)}
-      function createNode(tag, props){ const el = document.createElement(tag); if(props) Object.assign(el, props); return el; }
-
-      // hide loader
-      setTimeout(()=> loader && loader.remove(), 300);
-
-      // Local data (saved in localStorage)
-      const LS_KEY = 'birthday_app_v1';
-      const defaultState = {
-        name: 'Parina Bandariya',
-        letter: 'Every memory with you is a treasure — I hope this little gift brings a smile to your face today.',
-        images: [
-          'assets/photo1.jpg', 'assets/photo2.jpg', 'assets/photo3.jpg', 'assets/photo4.jpg'
-        ]
-      };
-      let state = Object.assign({}, defaultState, JSON.parse(localStorage.getItem(LS_KEY) || '{}'));
-
-      function saveState(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
-
-      // initialize name
-      function applyName(){ friendNameEl.textContent = state.name; heroNameEl.textContent = state.name; editName.value = state.name; letterName.value = state.name; }
-      applyName();
-
-      editName.addEventListener('input', (e)=>{ state.name = e.target.value || 'Friend'; applyName(); saveState(); });
-
-      // Letter controls
-      heartBtn.addEventListener('click', ()=>{ secretLetter.style.display='flex'; secretLetter.setAttribute('aria-hidden','false'); });
-      closeLetter.addEventListener('click', ()=>{ secretLetter.style.display='none'; secretLetter.setAttribute('aria-hidden','true'); });
-      closeLetter2.addEventListener('click', ()=>{ secretLetter.style.display='none'; secretLetter.setAttribute('aria-hidden','true'); });
-      saveLetter.addEventListener('click', ()=>{ state.letter = letterText.value; state.name = letterName.value || state.name; applyName(); saveState(); alert('Saved locally — no server involved'); });
-      letterText.value = state.letter;
-
-      // Audio Engine: synthesized ambient pad + open sfx (no external files)
-      let audioCtx = null;
-      let masterGain = null;
-      let ambientNodes = [];
-      let ambientPlaying = false;
-
-      function ensureAudio(){
-        if(audioCtx) return;
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        masterGain = audioCtx.createGain();
-        masterGain.gain.value = parseFloat(volume.value || 0.6);
-        masterGain.connect(audioCtx.destination);
-      }
-
-      function playAmbient(){
-        try{
-          ensureAudio();
-          if(ambientPlaying) return;
-          ambientPlaying = true;
-          // create two detuned oscillators through a filter for a soft pad
-          const now = audioCtx.currentTime;
-          const filter = audioCtx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 1200; filter.Q.value = 0.7; filter.connect(masterGain);
-
-          const padGain = audioCtx.createGain(); padGain.gain.value = 0.0001; padGain.connect(filter);
-
-          const oscA = audioCtx.createOscillator(); oscA.type = 'sine'; oscA.frequency.value = 220; oscA.detune.value = -7;
-          const oscB = audioCtx.createOscillator(); oscB.type = 'sine'; oscB.frequency.value = 220; oscB.detune.value = 5;
-          const oscAGain = audioCtx.createGain(); oscAGain.gain.value = 0.6; oscAGain.connect(padGain);
-          const oscBGain = audioCtx.createGain(); oscBGain.gain.value = 0.5; oscBGain.connect(padGain);
-
-          oscA.connect(oscAGain); oscB.connect(oscBGain);
-
-          oscA.start(now); oscB.start(now);
-
-          // slow fade-in
-          padGain.gain.exponentialRampToValueAtTime(0.9, now + 6);
-
-          // subtle slow LFO to detune for motion
-          const lfo = audioCtx.createOscillator(); lfo.type = 'sine'; lfo.frequency.value = 0.05; // very slow
-          const lfoGain = audioCtx.createGain(); lfoGain.gain.value = 6; // cents
-          lfo.connect(lfoGain);
-          lfoGain.connect(oscA.detune); lfoGain.connect(oscB.detune);
-          lfo.start(now);
-
-          ambientNodes = [oscA, oscB, oscAGain, oscBGain, padGain, filter, lfo, lfoGain];
-        }catch(e){ console.warn('Audio unavailable', e); }
-        updatePlayButton();
-      }
-
-      function stopAmbient(){
-        if(!audioCtx || !ambientPlaying) return;
-        ambientPlaying = false;
-        const now = audioCtx.currentTime;
-        // ramp down pad then stop
-        try{
-          ambientNodes.forEach(node=>{
-            try{ if(node instanceof AudioBufferSourceNode || node instanceof OscillatorNode){ node.stop(now + 0.8); } }catch(e){}
-            try{ if(node.gain) node.gain.exponentialRampToValueAtTime(0.0001, now + 0.6); }catch(e){}
-          });
-        }catch(e){}
-        ambientNodes = [];
-        updatePlayButton();
-      }
-
-      function playOpenSfx(){
-        try{
-          ensureAudio();
-          const now = audioCtx.currentTime;
-          const o = audioCtx.createOscillator(); o.type = 'triangle'; o.frequency.value = 880;
-          const g = audioCtx.createGain(); g.gain.setValueAtTime(0.0001, now);
-          g.gain.exponentialRampToValueAtTime(0.6, now + 0.02);
-          g.gain.exponentialRampToValueAtTime(0.0001, now + 0.9);
-          const filter = audioCtx.createBiquadFilter(); filter.type = 'highpass'; filter.frequency.value = 400;
-          o.connect(g); g.connect(filter); filter.connect(masterGain);
-          o.start(now); o.stop(now + 1.2);
-        }catch(e){ console.warn('SFX unavailable', e); }
-      }
-
-      function updatePlayButton(){ playPauseBtn.textContent = ambientPlaying ? '⏸️' : '▶️'; }
-
-      // wire play/pause button
-      playPauseBtn.addEventListener('click', async ()=>{
-        try{ // resume audio context if suspended
-          ensureAudio(); if(audioCtx.state === 'suspended') await audioCtx.resume();
-          if(ambientPlaying) stopAmbient(); else playAmbient();
-        }catch(e){ console.warn(e); }
-      });
-
-      volume.addEventListener('input', (e)=>{ if(masterGain) masterGain.gain.value = parseFloat(e.target.value); });
-
-      // fullscreen
-      fullscreenBtn.addEventListener('click', ()=>{ if(!document.fullscreenElement){ document.documentElement.requestFullscreen().catch(()=>{}); } else document.exitFullscreen().catch(()=>{}); });
-
-      // theme toggle (light/dim)
-      let dark = false;
-      themeToggle.addEventListener('click', ()=>{
-        dark = !dark; if(dark){ document.documentElement.style.setProperty('--bg','#0f1020'); document.documentElement.style.setProperty('--card','#101218'); document.documentElement.style.setProperty('--text','#fff'); document.documentElement.style.setProperty('--muted','#a8a6b0'); } else{ document.documentElement.removeAttribute('style'); }
-      });
-
-      // Open app (scroll and small reveal)
-      openBtn.addEventListener('click', async ()=>{
-        try{ // user gesture - start ambient
-          await (audioCtx ? (audioCtx.state === 'suspended' ? audioCtx.resume() : Promise.resolve()) : Promise.resolve());
-        }catch(e){}
-        playAmbient();
-        document.body.scrollIntoView({behavior:'smooth'});
-        confettiBurst(80);
-        playOpenSfx();
-      });
-
-      // Celebrate button
-      celebrateBtn.addEventListener('click', ()=>{ confettiBurst(200); playOpenSfx(); });
-
-      // Gallery wiring
-      function addImage(src, caption){
-        const fig = createNode('figure'); fig.className='polaroid'; fig.tabIndex=0; fig.setAttribute('role','listitem');
-        const img = createNode('img'); img.src=src; img.alt = caption || 'Memory photo';
-        const cap = createNode('figcaption'); cap.textContent = caption || '';
-        fig.appendChild(img); fig.appendChild(cap);
-        fig.addEventListener('click', ()=> openLightbox(src, cap.textContent || ''));
-        fig.addEventListener('keydown', (e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); fig.click(); } });
-        polaroidGrid.appendChild(fig);
-      }
-
-      function renderImages(){ polaroidGrid.innerHTML=''; (state.images||[]).forEach((it, idx)=> addImage(it, 'Memory ' + (idx+1))); }
-      renderImages();
-
-      fileInput.addEventListener('change', (e)=>{
-        const files = Array.from(e.target.files || []);
-        files.forEach(f=>{
-          const url = URL.createObjectURL(f);
-          state.images.unshift(url);
-        });
-        saveState(); renderImages();
-      });
-
-      addSamplePhotos.addEventListener('click', ()=>{ state.images = (state.images || []).concat(['assets/photo1.jpg','assets/photo2.jpg','assets/photo3.jpg','assets/photo4.jpg']); saveState(); renderImages(); });
-
-      galleryJump.addEventListener('click', ()=>{ document.getElementById('gallery').scrollIntoView({behavior:'smooth'}); });
-
-      // lightbox
-      function openLightbox(src, caption){ lightboxImg.src = src; lightboxCaption.textContent = caption; lightbox.style.display='flex'; lightbox.setAttribute('aria-hidden','false'); currentOpenImage = src; }
-      lightboxClose.addEventListener('click', closeLightbox);
-      lightbox.addEventListener('click', (e)=>{ if(e.target === lightbox) closeLightbox(); });
-      function closeLightbox(){ lightbox.style.display='none'; lightbox.setAttribute('aria-hidden','true'); lightboxImg.src=''; }
-
-      // download currently open image
-      let currentOpenImage = null;
-      downloadAll.addEventListener('click', ()=>{
-        const url = currentOpenImage || (state.images && state.images[0]);
-        if(!url){ alert('No image available to download'); return; }
-        // attempt to download using an anchor
-        const a = document.createElement('a'); a.href = url; a.download = (url.split('/').pop() || 'photo.jpg'); document.body.appendChild(a); a.click(); a.remove();
-      });
-
-      // gift
-      giftBox.addEventListener('click', async ()=>{
-        playOpenSfx();
-        giftBox.style.transform = 'translateY(-6px) scale(1.02)';
-        confettiBurst(160);
-        await new Promise(r=>setTimeout(r,560));
-        giftReveal.style.display='block'; giftReveal.setAttribute('aria-hidden','false');
-      });
-      giftClose.addEventListener('click', ()=>{ giftReveal.style.display='none'; giftReveal.setAttribute('aria-hidden','true'); giftBox.style.transform=''; });
-
-      // smile
-      const compliments = ["You light up the room.", "Your laugh is my favorite sound.", "You are loved more than you know.", "You are brave and beautiful."]; 
-      smileBtn.addEventListener('click', ()=>{ const msg = compliments[Math.floor(Math.random()*compliments.length)]; smileToast.textContent = msg; smileToast.style.display='inline-block'; setTimeout(()=> smileToast.style.display='none', 3700); playOpenSfx(); });
-
-      // finale
-      finaleBtn.addEventListener('click', ()=>{ const n = parseInt(confettiCountInput.value || '140', 10); confettiBurst(n); playOpenSfx(); });
-
-      // confetti implementation (DOM-based) — improved physics and removal
-      function confettiBurst(count=80){
+      // helper
+      function confettiBurst(count=600){
         for(let i=0;i<count;i++){
-          const el = document.createElement('div'); el.className = 'confetti-piece';
+          const el = document.createElement('div'); el.className='confetti-piece';
           const size = (6 + Math.random()*12)|0; el.style.width = size+'px'; el.style.height = size+'px';
-          el.style.left = (40 + Math.random()*20) + '%';
-          el.style.top = (10 + Math.random()*10) + '%';
-          el.style.background = ['#FF6B96','#FFD59A','#EADFF9','#FFF6EA','#FFB3C9','#C8F7E5'][Math.floor(Math.random()*6)];
-          el.style.transform = `rotate(${Math.random()*360}deg)`;
-          el.style.opacity = '1';
+          el.style.left = (40 + Math.random()*20) + '%'; el.style.top = (10 + Math.random()*10) + '%';
+          el.style.background = ['#FF6B96','#FFD59A','#EADFF9','#FFF6EA','#FFB3C9'][Math.floor(Math.random()*5)];
           document.body.appendChild(el);
-          const tx = (Math.random()-0.5)*800;
-          const ty = 400 + Math.random()*600;
-          const rot = (Math.random()-0.5)*1080;
-          el.animate([
-            { transform: 'translate(0,0) rotate(0deg)', opacity:1 },
-            { transform: `translate(${tx}px, ${ty}px) rotate(${rot}deg)`, opacity:0 }
-          ], { duration: 1000 + Math.random()*1600, easing: 'cubic-bezier(.2,.8,.2,1)' });
-          setTimeout(()=> el.remove(), 2600);
+          const tx = (Math.random()-0.5)*800; const ty = 400 + Math.random()*600; const rot = (Math.random()-0.5)*1080;
+          el.animate([{transform:'translate(0,0) rotate(0deg)',opacity:1},{transform:`translate(${tx}px, ${ty}px) rotate(${rot}deg)`,opacity:0}],{duration:1000+Math.random()*1600,easing:'cubic-bezier(.2,.8,.2,1)'});
+          setTimeout(()=> el.remove(),2600);
         }
       }
 
-      // Typewriter on scroll
-      const storyItems = document.querySelectorAll('.story-item');
-      const obs = new IntersectionObserver((entries, o)=>{
-        entries.forEach(entry=>{
-          if(entry.isIntersecting){
-            const dest = entry.target.querySelector('.typewriter');
-            const text = entry.target.getAttribute('data-text') || '';
-            if(dest && !dest.dataset.typed){ let i=0; const timer = setInterval(()=>{ dest.textContent += text.charAt(i)||''; i++; if(i>text.length) clearInterval(timer); }, 28); dest.dataset.typed='1'; }
-            o.unobserve(entry.target);
-          }
-        });
-      },{threshold:0.4});
-      storyItems.forEach(it=> obs.observe(it));
-
-      // keyboard shortcuts
-      document.addEventListener('keydown', async (e)=>{
-        if(e.key === 'Escape'){ closeLightbox(); secretLetter.style.display='none'; }
-        if(e.key.toLowerCase()==='c') confettiBurst(120);
-        if(e.key.toLowerCase()==='m') { if(audioCtx){ if(audioCtx.state === 'suspended') await audioCtx.resume(); masterGain.gain.value = masterGain.gain.value ? 0 : parseFloat(volume.value || 0.6); } }
+      // Restore welcome handling
+      openBtn && openBtn.addEventListener('click', async ()=>{
+        // user gesture -> play audio (if file present)
+        try{ if(bgAudio){ await bgAudio.play().catch(()=>{}); playPauseBtn.textContent='⏸️'; } }catch(e){}
+        welcome.style.display='none';
+        app.style.display='block';
+        app.setAttribute('aria-hidden','false');
+        confettiBurst(600);
+        document.getElementById('hero') && document.getElementById('hero').scrollIntoView({behavior:'smooth'});
       });
 
-      // preload images gracefully
-      function preload(src){ const i = new Image(); i.src = src; }
-      (state.images||[]).slice(0,6).forEach(preload);
+      // Play/pause
+      playPauseBtn && playPauseBtn.addEventListener('click', async ()=>{
+        if(!bgAudio) return;
+        if(bgAudio.paused){ try{ await bgAudio.play().catch(()=>{}); playPauseBtn.textContent='⏸️'; }catch(e){} }
+        else { bgAudio.pause(); playPauseBtn.textContent='▶️'; }
+      });
+      volume && volume.addEventListener('input', (e)=>{ if(bgAudio) bgAudio.volume = parseFloat(e.target.value); });
 
-      // initial setup: load assets if present
-      if(!state.images || !state.images.length) state.images = defaultState.images;
-      renderImages(); saveState();
+      // lightbox
+      polaroids.forEach(p=>{ p.addEventListener('click', ()=>{ const img = p.querySelector('img'); if(!img) return; lightboxImg.src = img.src; lightbox.style.display='flex'; }); p.addEventListener('keydown',(e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); p.click(); } }); });
+      lightboxClose && lightboxClose.addEventListener('click', ()=>{ lightbox.style.display='none'; lightboxImg.src=''; });
 
-      // Accessibility: announce when confetti starts
-      function announce(msg){ const s = document.createElement('div'); s.style.position='absolute'; s.style.left='-9999px'; s.setAttribute('role','status'); s.textContent = msg; document.body.appendChild(s); setTimeout(()=> s.remove(),2000); }
+      // gift
+      giftBox && giftBox.addEventListener('click', async ()=>{ giftBox.style.transform='translateY(-6px) scale(1.02)'; confettiBurst(600); await new Promise(r=>setTimeout(r,560)); if(giftReveal){ giftReveal.style.display='block'; giftReveal.setAttribute('aria-hidden','false'); } });
+      giftClose && giftClose.addEventListener('click', ()=>{ if(giftReveal){ giftReveal.style.display='none'; giftReveal.setAttribute('aria-hidden','true'); } giftBox.style.transform=''; });
 
-      // clean up object URLs on unload (for images added in-session)
-      window.addEventListener('beforeunload', ()=>{ (state.images||[]).forEach(u=>{ try{ if(u.startsWith('blob:')) URL.revokeObjectURL(u); }catch(e){} }); });
+      // celebrate/finale
+      celebrateBtn && celebrateBtn.addEventListener('click', ()=>{ confettiBurst(600); try{ if(bgAudio){ bgAudio.currentTime = 0; } }catch(e){} });
+      finaleBtn && finaleBtn.addEventListener('click', ()=>{ confettiBurst(600); });
 
-    })();
+      // keyboard
+      document.addEventListener('keydown',(e)=>{ if(e.key==='Escape'){ lightbox.style.display='none'; if(giftReveal) giftReveal.style.display='none'; } if(e.key.toLowerCase()==='c') confettiBurst(600); });
+    });
   </script>
 </body>
 </html>
