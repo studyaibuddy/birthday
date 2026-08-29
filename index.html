@@ -169,16 +169,14 @@
         </div>
       </section>
 
-      <section id="smile" style="margin-top:20px">
-        <h3 class="section-title">Click for a Smile</h3>
+      <section id="smile" style="margin-top:20px"><h3 class="section-title">Click for a Smile</h3>
         <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
           <button id="smileBtn" class="big-btn">Click for a Smile 😊</button>
           <div id="smileToast" class="toast hidden" role="status" aria-live="polite" style="display:none"></div>
         </div>
       </section>
 
-      <section id="finale" style="margin-top:20px">
-        <h3 class="section-title">Finale</h3>
+      <section id="finale" style="margin-top:20px"><h3 class="section-title">Finale</h3>
         <div style="text-align:center;margin-bottom:36px">
           <button id="finaleBtn" class="btn primary">Celebrate 🎆</button>
         </div>
@@ -204,9 +202,7 @@
     <!-- Confetti root (dom confetti pieces appended here) -->
     <div id="confetti"></div>
 
-    <!-- Optional audio files (won't break if missing) -->
-    <audio id="bgAudio" loop preload="auto" src="assets/ambient.mp3"></audio>
-    <audio id="openSfx" src="assets/open.mp3"></audio>
+    <!-- NOTE: No external audio files. Using synthesized ambient + sfx for a smooth calm sound -->
   </div>
 
   <script>
@@ -217,7 +213,6 @@
       const openBtn = document.getElementById('openBtn');
       const app = document.getElementById('app');
       const playPauseBtn = document.getElementById('playPauseBtn');
-      const bgAudio = document.getElementById('bgAudio');
       const volume = document.getElementById('volume');
       const polaroids = document.querySelectorAll('.polaroid');
       const lightbox = document.getElementById('lightbox');
@@ -236,23 +231,108 @@
       // remove loader quickly
       setTimeout(()=> loader && loader.remove(), 300);
 
+      // --- Synthesized smooth ambient audio (client-side WebAudio) ---
+      let audioCtx = null;
+      let masterGain = null;
+      let ambientNodes = [];
+      let ambientPlaying = false;
+
+      function ensureAudio(){
+        if(audioCtx) return;
+        try{
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          masterGain = audioCtx.createGain();
+          masterGain.gain.value = parseFloat(volume.value || 0.6);
+          masterGain.connect(audioCtx.destination);
+        }catch(e){ console.warn('WebAudio unavailable', e); }
+      }
+
+      function playAmbient(){
+        if(!audioCtx) ensureAudio();
+        if(!audioCtx || ambientPlaying) return;
+        ambientPlaying = true;
+        const now = audioCtx.currentTime;
+
+        // gentle pad: three detuned oscillators through gentle filter and slow attack
+        const filter = audioCtx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 1200; filter.Q.value = 0.7; filter.connect(masterGain);
+
+        const padGain = audioCtx.createGain(); padGain.gain.value = 0.0001; padGain.connect(filter);
+
+        const osc1 = audioCtx.createOscillator(); osc1.type = 'sine'; osc1.frequency.value = 110; osc1.detune.value = -6;
+        const osc2 = audioCtx.createOscillator(); osc2.type = 'sine'; osc2.frequency.value = 110; osc2.detune.value = 4;
+        const osc3 = audioCtx.createOscillator(); osc3.type = 'sine'; osc3.frequency.value = 165; osc3.detune.value = 2;
+
+        const g1 = audioCtx.createGain(); g1.gain.value = 0.6; g1.connect(padGain);
+        const g2 = audioCtx.createGain(); g2.gain.value = 0.5; g2.connect(padGain);
+        const g3 = audioCtx.createGain(); g3.gain.value = 0.35; g3.connect(padGain);
+
+        osc1.connect(g1); osc2.connect(g2); osc3.connect(g3);
+
+        osc1.start(now); osc2.start(now); osc3.start(now);
+
+        // slow fade-in for smoothness
+        padGain.gain.exponentialRampToValueAtTime(0.9, now + 6);
+
+        // slow LFO for subtle detune movement
+        const lfo = audioCtx.createOscillator(); lfo.type = 'sine'; lfo.frequency.value = 0.03; // very slow
+        const lfoGain = audioCtx.createGain(); lfoGain.gain.value = 6; // cents
+        lfo.connect(lfoGain);
+        lfoGain.connect(osc1.detune); lfoGain.connect(osc2.detune); lfoGain.connect(osc3.detune);
+        lfo.start(now);
+
+        ambientNodes = [osc1, osc2, osc3, g1, g2, g3, padGain, filter, lfo, lfoGain];
+        updatePlayButton();
+      }
+
+      function stopAmbient(){
+        if(!audioCtx || !ambientPlaying) return;
+        ambientPlaying = false;
+        const now = audioCtx.currentTime;
+        try{
+          // ramp down and stop
+          ambientNodes.forEach(node=>{
+            try{ if(node instanceof AudioBufferSourceNode || node instanceof OscillatorNode){ node.stop(now + 0.8); } }catch(e){}
+            try{ if(node.gain) node.gain.exponentialRampToValueAtTime(0.0001, now + 0.6); }catch(e){}
+          });
+        }catch(e){ console.warn(e); }
+        ambientNodes = [];
+        updatePlayButton();
+      }
+
+      function playOpenSfx(){
+        if(!audioCtx) ensureAudio();
+        if(!audioCtx) return;
+        const now = audioCtx.currentTime;
+        const o = audioCtx.createOscillator(); o.type = 'triangle'; o.frequency.value = 880;
+        const g = audioCtx.createGain(); g.gain.setValueAtTime(0.0001, now);
+        g.gain.exponentialRampToValueAtTime(0.45, now + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + 0.9);
+        const filter = audioCtx.createBiquadFilter(); filter.type = 'highpass'; filter.frequency.value = 400;
+        o.connect(g); g.connect(filter); filter.connect(masterGain);
+        o.start(now); o.stop(now + 1.1);
+      }
+
+      function updatePlayButton(){ playPauseBtn.textContent = ambientPlaying ? '⏸️' : '▶️'; }
+
+      // wire play/pause
+      playPauseBtn && playPauseBtn.addEventListener('click', async ()=>{
+        try{ ensureAudio(); if(audioCtx.state === 'suspended') await audioCtx.resume(); if(ambientPlaying) stopAmbient(); else playAmbient(); }catch(e){ console.warn(e); }
+      });
+
+      // volume control
+      volume && volume.addEventListener('input', (e)=>{ if(masterGain) masterGain.gain.value = parseFloat(e.target.value); });
+
       // Open app
       openBtn && openBtn.addEventListener('click', async () => {
-        try { bgAudio && await bgAudio.play().catch(()=>{}); } catch(e){}
+        try{ // user gesture: start audio
+          ensureAudio(); if(audioCtx && audioCtx.state === 'suspended') await audioCtx.resume(); playAmbient(); playOpenSfx();
+        }catch(e){ }
         welcome.style.display = 'none';
         app.style.display = 'block';
         app.setAttribute('aria-hidden','false');
-        confettiBurst(36);
+        confettiBurst(120);
         document.getElementById('hero') && document.getElementById('hero').scrollIntoView({behavior:'smooth'});
       });
-
-      // audio controls (safe if audio file missing)
-      playPauseBtn && playPauseBtn.addEventListener('click', () => {
-        if(!bgAudio) return;
-        if(bgAudio.paused){ bgAudio.play().catch(()=>{}); playPauseBtn.textContent = '⏸️'; }
-        else { bgAudio.pause(); playPauseBtn.textContent = '▶️'; }
-      });
-      volume && volume.addEventListener('input', (e)=> { if(bgAudio) bgAudio.volume = parseFloat(e.target.value); });
 
       // polaroid -> lightbox
       polaroids.forEach(p => {
@@ -271,16 +351,13 @@
 
       // gift
       giftBox && giftBox.addEventListener('click', async () => {
+        playOpenSfx();
         giftBox.style.transform = 'translateY(-6px) scale(1.02)';
-        try { document.getElementById('openSfx') && (document.getElementById('openSfx').currentTime = 0, document.getElementById('openSfx').play().catch(()=>{})); } catch(e){}
-        confettiBurst(120);
+        confettiBurst(160);
         await new Promise(r => setTimeout(r, 600));
         if (giftReveal) { giftReveal.style.display = 'block'; giftReveal.setAttribute('aria-hidden','false'); }
       });
-      giftClose && giftClose.addEventListener('click', () => {
-        if (giftReveal) { giftReveal.style.display = 'none'; giftReveal.setAttribute('aria-hidden','true'); }
-        giftBox.style.transform = '';
-      });
+      giftClose && giftClose.addEventListener('click', () => { if (giftReveal) { giftReveal.style.display = 'none'; giftReveal.setAttribute('aria-hidden','true'); } giftBox.style.transform = ''; });
 
       // smile
       const compliments = ["You light up the room.", "Your laugh is my favorite sound.", "You are loved more than you know.", "You are brave and beautiful."];
@@ -291,26 +368,19 @@
           smileToast.style.display = 'inline-block';
           setTimeout(()=> smileToast.style.display = 'none', 3200);
         }
+        playOpenSfx();
       });
 
       // secret letter
       const heartOpenBtn = document.getElementById('heartSecretBtn');
-      heartOpenBtn && heartOpenBtn.addEventListener('click', () => {
-        if (secretLetter) { secretLetter.style.display = 'flex'; secretLetter.setAttribute('aria-hidden','false'); }
-      });
-      closeLetter && closeLetter.addEventListener('click', () => {
-        if (secretLetter) { secretLetter.style.display = 'none'; secretLetter.setAttribute('aria-hidden','true'); }
-      });
+      heartOpenBtn && heartOpenBtn.addEventListener('click', () => { if (secretLetter) { secretLetter.style.display = 'flex'; secretLetter.setAttribute('aria-hidden','false'); } });
+      closeLetter && closeLetter.addEventListener('click', () => { if (secretLetter) { secretLetter.style.display = 'none'; secretLetter.setAttribute('aria-hidden','true'); } });
 
       // finale
-      finaleBtn && finaleBtn.addEventListener('click', () => {
-        confettiBurst(260);
-      });
+      finaleBtn && finaleBtn.addEventListener('click', () => { confettiBurst(260); playOpenSfx(); });
 
       // keyboard escape
-      document.addEventListener('keydown', (e) => {
-        if(e.key === 'Escape') { closeLightbox(); if (secretLetter) secretLetter.style.display = 'none'; }
-      });
+      document.addEventListener('keydown', (e) => { if(e.key === 'Escape') { closeLightbox(); if (secretLetter) secretLetter.style.display = 'none'; } });
 
       // simple DOM confetti (no canvas) — safe and visible
       function confettiBurst(count=80){
@@ -336,25 +406,9 @@
 
       // typewriter on scroll for story items
       const storyItems = document.querySelectorAll('.story-item');
-      const obs = new IntersectionObserver((entries, o) => {
-        entries.forEach(entry => {
-          if(entry.isIntersecting){
-            const dest = entry.target.querySelector('.typewriter');
-            const text = entry.target.getAttribute('data-text') || '';
-            if(dest && !dest.dataset.typed){
-              let i=0;
-              const timer = setInterval(()=> {
-                dest.textContent += text.charAt(i) || '';
-                i++;
-                if(i>text.length) clearInterval(timer);
-              }, 28);
-              dest.dataset.typed = '1';
-            }
-            o.unobserve(entry.target);
-          }
-        });
-      }, {threshold:0.4});
+      const obs = new IntersectionObserver((entries, o) => { entries.forEach(entry => { if(entry.isIntersecting){ const dest = entry.target.querySelector('.typewriter'); const text = entry.target.getAttribute('data-text') || ''; if(dest && !dest.dataset.typed){ let i=0; const timer = setInterval(()=> { dest.textContent += text.charAt(i) || ''; i++; if(i>text.length) clearInterval(timer); }, 28); dest.dataset.typed = '1'; } o.unobserve(entry.target); } }); }, {threshold:0.4});
       storyItems.forEach(it => obs.observe(it));
+
     });
   </script>
 </body>
