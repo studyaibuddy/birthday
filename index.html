@@ -211,10 +211,6 @@
   <!-- Confetti root (dom confetti pieces appended here) -->
   <div id="confetti"></div>
 
-  <!-- Optional audio files (won't break if missing) -->
-  <audio id="bgAudio" loop preload="auto" src="assets/ambient.mp3"></audio>
-  <audio id="openSfx" src="assets/open.mp3"></audio>
-
   <script>
     (function(){
       // Elements
@@ -222,7 +218,6 @@
       const openBtn = document.getElementById('openBtn');
       const appContainer = document.querySelector('.container');
       const playPauseBtn = document.getElementById('playPauseBtn');
-      const bgAudio = document.getElementById('bgAudio');
       const volume = document.getElementById('volume');
       const polaroidGrid = document.getElementById('polaroidGrid');
       const lightbox = document.getElementById('lightbox');
@@ -287,10 +282,95 @@
       saveLetter.addEventListener('click', ()=>{ state.letter = letterText.value; state.name = letterName.value || state.name; applyName(); saveState(); alert('Saved locally — no server involved'); });
       letterText.value = state.letter;
 
-      // Audio controls with graceful fallback
-      function updatePlayButton(){ if(!bgAudio) return; playPauseBtn.textContent = bgAudio.paused ? '▶️' : '⏸️'; }
-      playPauseBtn.addEventListener('click', async ()=>{ if(!bgAudio) return; try{ if(bgAudio.paused){ await bgAudio.play().catch(()=>{}); } else bgAudio.pause(); updatePlayButton(); }catch(e){} });
-      volume.addEventListener('input', (e)=>{ if(bgAudio) bgAudio.volume = parseFloat(e.target.value); });
+      // Audio Engine: synthesized ambient pad + open sfx (no external files)
+      let audioCtx = null;
+      let masterGain = null;
+      let ambientNodes = [];
+      let ambientPlaying = false;
+
+      function ensureAudio(){
+        if(audioCtx) return;
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        masterGain = audioCtx.createGain();
+        masterGain.gain.value = parseFloat(volume.value || 0.6);
+        masterGain.connect(audioCtx.destination);
+      }
+
+      function playAmbient(){
+        try{
+          ensureAudio();
+          if(ambientPlaying) return;
+          ambientPlaying = true;
+          // create two detuned oscillators through a filter for a soft pad
+          const now = audioCtx.currentTime;
+          const filter = audioCtx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 1200; filter.Q.value = 0.7; filter.connect(masterGain);
+
+          const padGain = audioCtx.createGain(); padGain.gain.value = 0.0001; padGain.connect(filter);
+
+          const oscA = audioCtx.createOscillator(); oscA.type = 'sine'; oscA.frequency.value = 220; oscA.detune.value = -7;
+          const oscB = audioCtx.createOscillator(); oscB.type = 'sine'; oscB.frequency.value = 220; oscB.detune.value = 5;
+          const oscAGain = audioCtx.createGain(); oscAGain.gain.value = 0.6; oscAGain.connect(padGain);
+          const oscBGain = audioCtx.createGain(); oscBGain.gain.value = 0.5; oscBGain.connect(padGain);
+
+          oscA.connect(oscAGain); oscB.connect(oscBGain);
+
+          oscA.start(now); oscB.start(now);
+
+          // slow fade-in
+          padGain.gain.exponentialRampToValueAtTime(0.9, now + 6);
+
+          // subtle slow LFO to detune for motion
+          const lfo = audioCtx.createOscillator(); lfo.type = 'sine'; lfo.frequency.value = 0.05; // very slow
+          const lfoGain = audioCtx.createGain(); lfoGain.gain.value = 6; // cents
+          lfo.connect(lfoGain);
+          lfoGain.connect(oscA.detune); lfoGain.connect(oscB.detune);
+          lfo.start(now);
+
+          ambientNodes = [oscA, oscB, oscAGain, oscBGain, padGain, filter, lfo, lfoGain];
+        }catch(e){ console.warn('Audio unavailable', e); }
+        updatePlayButton();
+      }
+
+      function stopAmbient(){
+        if(!audioCtx || !ambientPlaying) return;
+        ambientPlaying = false;
+        const now = audioCtx.currentTime;
+        // ramp down pad then stop
+        try{
+          ambientNodes.forEach(node=>{
+            try{ if(node instanceof AudioBufferSourceNode || node instanceof OscillatorNode){ node.stop(now + 0.8); } }catch(e){}
+            try{ if(node.gain) node.gain.exponentialRampToValueAtTime(0.0001, now + 0.6); }catch(e){}
+          });
+        }catch(e){}
+        ambientNodes = [];
+        updatePlayButton();
+      }
+
+      function playOpenSfx(){
+        try{
+          ensureAudio();
+          const now = audioCtx.currentTime;
+          const o = audioCtx.createOscillator(); o.type = 'triangle'; o.frequency.value = 880;
+          const g = audioCtx.createGain(); g.gain.setValueAtTime(0.0001, now);
+          g.gain.exponentialRampToValueAtTime(0.6, now + 0.02);
+          g.gain.exponentialRampToValueAtTime(0.0001, now + 0.9);
+          const filter = audioCtx.createBiquadFilter(); filter.type = 'highpass'; filter.frequency.value = 400;
+          o.connect(g); g.connect(filter); filter.connect(masterGain);
+          o.start(now); o.stop(now + 1.2);
+        }catch(e){ console.warn('SFX unavailable', e); }
+      }
+
+      function updatePlayButton(){ playPauseBtn.textContent = ambientPlaying ? '⏸️' : '▶️'; }
+
+      // wire play/pause button
+      playPauseBtn.addEventListener('click', async ()=>{
+        try{ // resume audio context if suspended
+          ensureAudio(); if(audioCtx.state === 'suspended') await audioCtx.resume();
+          if(ambientPlaying) stopAmbient(); else playAmbient();
+        }catch(e){ console.warn(e); }
+      });
+
+      volume.addEventListener('input', (e)=>{ if(masterGain) masterGain.gain.value = parseFloat(e.target.value); });
 
       // fullscreen
       fullscreenBtn.addEventListener('click', ()=>{ if(!document.fullscreenElement){ document.documentElement.requestFullscreen().catch(()=>{}); } else document.exitFullscreen().catch(()=>{}); });
@@ -303,13 +383,17 @@
 
       // Open app (scroll and small reveal)
       openBtn.addEventListener('click', async ()=>{
-        try{ await bgAudio.play().catch(()=>{}); }catch(e){}
+        try{ // user gesture - start ambient
+          await (audioCtx ? (audioCtx.state === 'suspended' ? audioCtx.resume() : Promise.resolve()) : Promise.resolve());
+        }catch(e){}
+        playAmbient();
         document.body.scrollIntoView({behavior:'smooth'});
         confettiBurst(80);
+        playOpenSfx();
       });
 
       // Celebrate button
-      celebrateBtn.addEventListener('click', ()=>{ confettiBurst(200); try{ document.getElementById('openSfx') && (document.getElementById('openSfx').currentTime=0, document.getElementById('openSfx').play().catch(()=>{})); }catch(e){} });
+      celebrateBtn.addEventListener('click', ()=>{ confettiBurst(200); playOpenSfx(); });
 
       // Gallery wiring
       function addImage(src, caption){
@@ -355,7 +439,7 @@
 
       // gift
       giftBox.addEventListener('click', async ()=>{
-        try{ document.getElementById('openSfx') && (document.getElementById('openSfx').currentTime=0, document.getElementById('openSfx').play().catch(()=>{})); }catch(e){}
+        playOpenSfx();
         giftBox.style.transform = 'translateY(-6px) scale(1.02)';
         confettiBurst(160);
         await new Promise(r=>setTimeout(r,560));
@@ -365,10 +449,10 @@
 
       // smile
       const compliments = ["You light up the room.", "Your laugh is my favorite sound.", "You are loved more than you know.", "You are brave and beautiful."]; 
-      smileBtn.addEventListener('click', ()=>{ const msg = compliments[Math.floor(Math.random()*compliments.length)]; smileToast.textContent = msg; smileToast.style.display='inline-block'; setTimeout(()=> smileToast.style.display='none', 3700); });
+      smileBtn.addEventListener('click', ()=>{ const msg = compliments[Math.floor(Math.random()*compliments.length)]; smileToast.textContent = msg; smileToast.style.display='inline-block'; setTimeout(()=> smileToast.style.display='none', 3700); playOpenSfx(); });
 
       // finale
-      finaleBtn.addEventListener('click', ()=>{ const n = parseInt(confettiCountInput.value || '140', 10); confettiBurst(n); });
+      finaleBtn.addEventListener('click', ()=>{ const n = parseInt(confettiCountInput.value || '140', 10); confettiBurst(n); playOpenSfx(); });
 
       // confetti implementation (DOM-based) — improved physics and removal
       function confettiBurst(count=80){
@@ -407,10 +491,10 @@
       storyItems.forEach(it=> obs.observe(it));
 
       // keyboard shortcuts
-      document.addEventListener('keydown', (e)=>{
+      document.addEventListener('keydown', async (e)=>{
         if(e.key === 'Escape'){ closeLightbox(); secretLetter.style.display='none'; }
         if(e.key.toLowerCase()==='c') confettiBurst(120);
-        if(e.key.toLowerCase()==='m') { if(bgAudio) bgAudio.muted = !bgAudio.muted; }
+        if(e.key.toLowerCase()==='m') { if(audioCtx){ if(audioCtx.state === 'suspended') await audioCtx.resume(); masterGain.gain.value = masterGain.gain.value ? 0 : parseFloat(volume.value || 0.6); } }
       });
 
       // preload images gracefully
