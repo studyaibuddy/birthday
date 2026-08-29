@@ -106,8 +106,7 @@
         <h2>Happy Birthday, <span id="heroName">Parina Bandariya</span> ❤️</h2>
         <p style="color:#6f566a">Open, read, and enjoy — made just for you.</p>
         <div style="margin-top:12px;display:flex;gap:10px;justify-content:center">
-          <button id="celebrateBtn" class="btn primary">Celebrate Now 🎉</button>
-          <button id="galleryJump" class="btn">View Memories</button>
+          <button id="galleryJump" class="big-btn">View Memories</button>
         </div>
       </div>
     </section>
@@ -227,7 +226,6 @@
       const secretLetter = document.getElementById('secretLetter');
       const closeLetter = document.getElementById('closeLetter');
       const finaleBtn = document.getElementById('finaleBtn');
-      const celebrateBtn = document.getElementById('celebrateBtn');
       const galleryJump = document.getElementById('galleryJump');
 
       // remove loader quickly
@@ -361,13 +359,7 @@
       });
       giftClose && giftClose.addEventListener('click', () => { if (giftReveal) { giftReveal.style.display = 'none'; giftReveal.setAttribute('aria-hidden','true'); } giftBox.style.transform = ''; });
 
-      // Celebrate Now button (fix: ensure it works)
-      celebrateBtn && celebrateBtn.addEventListener('click', () => {
-        confettiBurst(260);
-        playOpenSfx();
-      });
-
-      // View Memories button -> scroll to gallery
+      // View Memories button -> scroll to gallery (ensured working and larger button)
       galleryJump && galleryJump.addEventListener('click', () => {
         const gallery = document.getElementById('gallery');
         if(gallery) gallery.scrollIntoView({behavior:'smooth'});
