@@ -50,7 +50,8 @@
     .cake-flame{width:6px;height:10px;background:radial-gradient(circle,#ffff00,#ff8800);border-radius:50%;position:absolute;top:-10px;left:50%;transform:translateX(-50%);box-shadow:0 0 8px #ff8800}
     @keyframes sway{0%,100%{transform:translateX(0) rotate(0deg)}50%{transform:translateX(3px) rotate(1deg)}}
     /* Birthday Banner */
-    .birthday-banner{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:linear-gradient(135deg,#FFD700,#FFA500);padding:30px 50px;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.12);z-index:10001}
+    .birthday-banner{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:linear-gradient(135deg,#FFD700,#FFA500);padding:30px 50px;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.12);z-index:10001;display:flex;flex-direction:column;align-items:center;gap:12px}
+    .birthday-banner img{max-width:90vw;max-height:60vh;border-radius:12px;display:block}
     .birthday-banner h2{font-family:'Dancing Script',cursive;font-size:42px;margin:0;color:#fff;text-shadow:2px 2px 4px rgba(0,0,0,0.2)}
     .birthday-banner p{font-size:18px;margin:8px 0 0;color:#fff;text-shadow:1px 1px 2px rgba(0,0,0,0.1)}
     @keyframes slideInBanner{0%{transform:translate(-50%,-50%) scale(0);opacity:0}50%{transform:translate(-50%,-50%) scale(1.05)}100%{transform:translate(-50%,-50%) scale(1);opacity:1}}
@@ -80,11 +81,12 @@
     .polaroid img{width:100%;height:160px;object-fit:cover;border-radius:8px}
     figcaption{font-size:13px;color:#7e5f78}
     /* Gift */
-    .gift-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;position:fixed;top:72px;left:50%;transform:translateX(-50%);pointer-events:auto;z-index:30;width:220px;max-width:80%}
-    .gift-box{width:150px;height:120px;position:relative;cursor:pointer;transition:transform .2s}
-    .gift-box .lid{position:absolute;inset:0 0 60px 0;background:linear-gradient(135deg,#ffdfe9,#ffcce0);border-radius:12px 12px 6px 6px}
-    .gift-box .box{position:absolute;left:0;right:0;bottom:0;height:64px;background:linear-gradient(135deg,#fff6f8,#fff1f5);border-radius:6px}
-    .gift-box .ribbon{position:absolute;left:50%;top:12px;transform:translateX(-50%);width:36px;height:36px;background:linear-gradient(135deg,#ff6b96,#ff9abb);border-radius:8px}
+    .gift-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;position:fixed;top:72px;left:50%;transform:translateX(-50%);pointer-events:auto;z-index:30;width:420px;max-width:90%}
+    .gift-row{display:flex;gap:12px;justify-content:center;width:100%}
+    .gift-box{width:90px;height:80px;position:relative;cursor:pointer;transition:transform .2s;pointer-events:auto}
+    .gift-box .lid{position:absolute;inset:0 0 48px 0;background:linear-gradient(135deg,#ffdfe9,#ffcce0);border-radius:8px 8px 6px 6px}
+    .gift-box .box{position:absolute;left:0;right:0;bottom:0;height:40px;background:linear-gradient(135deg,#fff6f8,#fff1f5);border-radius:6px}
+    .gift-box .ribbon{position:absolute;left:50%;top:10px;transform:translateX(-50%);width:28px;height:28px;background:linear-gradient(135deg,#ff6b96,#ff9abb);border-radius:6px}
     .surprise{padding:12px;border-radius:12px}
     /* Buttons */
     .btn{padding:8px 12px;border-radius:12px;border:none;background:#fff;cursor:pointer}
@@ -103,7 +105,7 @@
     /* Confetti pieces (DOM) */
     .confetti-piece{position:fixed;pointer-events:none;border-radius:2px;z-index:10000}
     /* Responsive */
-    @media (max-width:600px){ .hero h2{font-size:24px} .polaroid img{height:130px} .gift-box{width:120px;height:100px} .birthday-banner{padding:20px 30px}.birthday-banner h2{font-size:28px}.cake-message-content{padding:20px} }
+    @media (max-width:600px){ .hero h2{font-size:24px} .polaroid img{height:130px} .gift-box{width:72px;height:64px} .birthday-banner{padding:20px 30px}.birthday-banner h2{font-size:28px}.cake-message-content{padding:20px} }
   </style>
 </head>
 <body>
@@ -135,7 +137,9 @@
       <div class="cake-middle"></div>
       <div class="cake-base"></div>
     </div>
+
     <div class="balloons-wrapper" id="balloonsContainer"></div>
+
     <div class="cake" data-cake="3">
       <div class="cake-candle"><div class="cake-flame"></div></div>
       <div class="cake-middle"></div>
@@ -148,10 +152,11 @@
     </div>
   </div>
 
-  <!-- Birthday Banner -->
-  <div id="birthdayBanner" class="birthday-banner banner-hidden">
-    <h2>🎉 Wishing you a happiest 15th birthday! 🎉</h2>
-    <p>Hope all your dreams come true!</p>
+  <!-- Birthday Banner (will try to load assets/banner.png if present) -->
+  <div id="birthdayBanner" class="birthday-banner banner-hidden" role="status" aria-live="polite">
+    <img id="bannerImage" src="" alt="Birthday banner" style="display:none">
+    <h2 id="bannerText">🎉 Wishing you a happiest 15th birthday! 🎉</h2>
+    <p id="bannerSubtext">Hope all your dreams come true!</p>
   </div>
 
   <!-- Cake Message Modal -->
@@ -160,6 +165,15 @@
       <h3 id="cakeMessageTitle">A Sweet Message</h3>
       <p id="cakeMessageText"></p>
       <button class="close-cake-message" onclick="document.getElementById('cakeMessageModal').style.display='none'">Close</button>
+    </div>
+  </div>
+
+  <!-- Gift reveal modal -->
+  <div id="giftReveal" class="cake-message-modal" aria-hidden="true">
+    <div class="cake-message-content">
+      <h3 id="giftRevealTitle">A Little Surprise</h3>
+      <p id="giftRevealText"></p>
+      <button id="giftClose" class="close-cake-message">Close</button>
     </div>
   </div>
 
@@ -264,6 +278,32 @@
       </div>
     </div>
 
+    <!-- Gifts (4) -->
+    <div id="giftWrap" class="gift-wrap" aria-hidden="true" style="display:none">
+      <div class="gift-row">
+        <div class="gift-box" data-gift="1" tabindex="0" role="button" aria-label="Gift 1">
+          <div class="lid"></div>
+          <div class="ribbon"></div>
+          <div class="box"></div>
+        </div>
+        <div class="gift-box" data-gift="2" tabindex="0" role="button" aria-label="Gift 2">
+          <div class="lid"></div>
+          <div class="ribbon"></div>
+          <div class="box"></div>
+        </div>
+        <div class="gift-box" data-gift="3" tabindex="0" role="button" aria-label="Gift 3">
+          <div class="lid"></div>
+          <div class="ribbon"></div>
+          <div class="box"></div>
+        </div>
+        <div class="gift-box" data-gift="4" tabindex="0" role="button" aria-label="Gift 4">
+          <div class="lid"></div>
+          <div class="ribbon"></div>
+          <div class="box"></div>
+        </div>
+      </div>
+    </div>
+
     <!-- Confetti root (dom confetti pieces appended here) -->
     <div id="confetti"></div>
 
@@ -282,6 +322,9 @@
       const decorationsContainer = document.getElementById('decorationsContainer');
       const balloonsContainer = document.getElementById('balloonsContainer');
       const birthdayBanner = document.getElementById('birthdayBanner');
+      const bannerImage = document.getElementById('bannerImage');
+      const bannerText = document.getElementById('bannerText');
+      const bannerSubtext = document.getElementById('bannerSubtext');
       const cakeMessageModal = document.getElementById('cakeMessageModal');
       const playPauseBtn = document.getElementById('playPauseBtn');
       const bgAudio = document.getElementById('bgAudio');
@@ -290,10 +333,6 @@
       const lightbox = document.getElementById('lightbox');
       const lightboxImg = document.getElementById('lightboxImg');
       const lightboxClose = document.getElementById('lightboxClose');
-      const giftBox = document.getElementById('giftBox');
-      const giftReveal = document.getElementById('giftReveal');
-      const giftClose = document.getElementById('giftClose');
-      const giftWrapper = document.getElementById('giftWrapper');
       const smileBtn = document.getElementById('smileBtn');
       const smileToast = document.getElementById('smileToast');
       const heartBtn = document.getElementById('heartSecretBtn');
@@ -301,6 +340,12 @@
       const closeLetter = document.getElementById('closeLetter');
       const finaleBtn = document.getElementById('finaleBtn');
       const galleryJump = document.getElementById('galleryJump');
+      const giftWrapper = document.getElementById('giftWrap');
+      const giftBoxes = document.querySelectorAll('.gift-box');
+      const giftReveal = document.getElementById('giftReveal');
+      const giftRevealTitle = document.getElementById('giftRevealTitle');
+      const giftRevealText = document.getElementById('giftRevealText');
+      const giftClose = document.getElementById('giftClose');
 
       // Cake messages - Friend-appropriate
       const cakeMessages = {
@@ -322,6 +367,14 @@
         }
       };
 
+      // Gifts - messages per gift
+      const giftMessages = {
+        1: { title: "A Tiny Treat 🍬", text: "A small token of sweetness — thank you for all the smiles!" },
+        2: { title: "A Memory 📷", text: "Here's to the moments we've captured — more to come!" },
+        3: { title: "A Little Cheer 🎈", text: "A burst of cheer, just like you bring to everyone." },
+        4: { title: "A Promise ✨", text: "For adventures ahead — I'm excited to share them with you." }
+      };
+
       let balloonsPopped = 0;
       const totalBalloons = 6;
       const balloonColors = ['red', 'blue', 'yellow', 'green', 'purple', 'red'];
@@ -333,9 +386,10 @@
       function createBalloons() {
         balloonsContainer.innerHTML = '';
         balloonsPopped = 0;
-        balloonColors.forEach((color) => {
+        balloonColors.forEach((color, idx) => {
           const balloon = document.createElement('div');
           balloon.className = `balloon ${color}`;
+          balloon.setAttribute('data-balloon', String(idx+1));
           balloon.addEventListener('click', (e) => {
             e.stopPropagation();
             popBalloon(balloon);
@@ -346,6 +400,7 @@
 
       // Pop balloon and check if all are popped
       function popBalloon(balloon) {
+        if (!balloon || balloon.classList.contains('pop')) return;
         balloon.classList.add('pop');
         balloon.style.pointerEvents = 'none';
         balloonsPopped++;
@@ -355,13 +410,37 @@
         }
       }
 
-      // Show birthday banner
+      // Show birthday banner (tries to load assets/banner.png; if not present, shows text fallback)
       function showBirthdayBanner() {
-        birthdayBanner.classList.remove('banner-hidden');
-        confettiBurst(180);
-        setTimeout(() => {
-          birthdayBanner.classList.add('banner-hidden');
-        }, 4000);
+        // try to load banner image
+        const img = new Image();
+        img.onload = () => {
+          bannerImage.src = img.src;
+          bannerImage.style.display = 'block';
+          bannerText.style.display = 'none';
+          bannerSubtext.style.display = 'none';
+          birthdayBanner.classList.remove('banner-hidden');
+          confettiBurst(180);
+          setTimeout(() => {
+            birthdayBanner.classList.add('banner-hidden');
+            bannerImage.style.display = 'none';
+            bannerText.style.display = '';
+            bannerSubtext.style.display = '';
+          }, 4000);
+        };
+        img.onerror = () => {
+          // fallback to text banner
+          bannerImage.style.display = 'none';
+          bannerText.style.display = '';
+          bannerSubtext.style.display = '';
+          birthdayBanner.classList.remove('banner-hidden');
+          confettiBurst(180);
+          setTimeout(() => {
+            birthdayBanner.classList.add('banner-hidden');
+          }, 4000);
+        };
+        // path to the banner image you will upload
+        img.src = 'assets/banner.png';
       }
 
       // Cake click handler
@@ -389,7 +468,7 @@
         try { bgAudio && await bgAudio.play().catch(()=>{}); } catch(e){}
         welcome.style.display = 'none';
         app.style.display = 'block';
-        giftWrapper.style.display = 'flex';
+        if (giftWrapper) { giftWrapper.style.display = 'flex'; giftWrapper.setAttribute('aria-hidden','false'); }
         app.setAttribute('aria-hidden','false');
         decorationsContainer.classList.add('show');
         createBalloons();
@@ -428,17 +507,27 @@
       lightbox && lightbox.addEventListener('click', (e) => { if(e.target === lightbox) closeLightbox(); });
       function closeLightbox(){ lightbox.style.display = 'none'; lightbox.setAttribute('aria-hidden','true'); lightboxImg.src = ''; }
 
-      // gift
-      giftBox && giftBox.addEventListener('click', async () => {
-        giftBox.style.transform = 'translateY(-6px) scale(1.02)';
-        try { document.getElementById('openSfx') && (document.getElementById('openSfx').currentTime = 0, document.getElementById('openSfx').play().catch(()=>{})); } catch(e){}
-        confettiBurst(120);
-        await new Promise(r => setTimeout(r, 600));
-        if (giftReveal) { giftReveal.style.display = 'block'; giftReveal.setAttribute('aria-hidden','false'); }
+      // gift click behavior
+      giftBoxes.forEach(box => {
+        box.addEventListener('click', async () => {
+          // visual pop
+          box.style.transform = 'translateY(-6px) scale(1.04)';
+          try { document.getElementById('openSfx') && (document.getElementById('openSfx').currentTime = 0, document.getElementById('openSfx').play().catch(()=>{})); } catch(e){}
+          confettiBurst(80);
+          await new Promise(r => setTimeout(r, 420));
+          const giftId = box.getAttribute('data-gift') || '1';
+          const msg = giftMessages[giftId] || {title: 'A Small Gift', text: 'Enjoy!'};
+          giftRevealTitle.textContent = msg.title;
+          giftRevealText.textContent = msg.text;
+          if (giftReveal) { giftReveal.style.display = 'flex'; giftReveal.setAttribute('aria-hidden','false'); }
+        });
+        // keyboard accessibility
+        box.addEventListener('keydown', (ev) => { if(ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); box.click(); }});
       });
       giftClose && giftClose.addEventListener('click', () => {
         if (giftReveal) { giftReveal.style.display = 'none'; giftReveal.setAttribute('aria-hidden','true'); }
-        giftBox.style.transform = '';
+        // reset any gift transforms
+        giftBoxes.forEach(b => b.style.transform = '');
       });
 
       // smile
@@ -468,10 +557,11 @@
 
       // keyboard escape
       document.addEventListener('keydown', (e) => {
-        if(e.key === 'Escape') { 
-          closeLightbox(); 
+        if(e.key === 'Escape') {
+          closeLightbox();
           if (secretLetter) secretLetter.style.display = 'none';
           if (cakeMessageModal) cakeMessageModal.style.display = 'none';
+          if (giftReveal) giftReveal.style.display = 'none';
         }
       });
 
