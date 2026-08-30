@@ -28,15 +28,15 @@
     .decorations-container{position:fixed;left:0;right:0;top:50%;transform:translateY(-50%);pointer-events:none;z-index:40;display:none;width:100%}
     .decorations-container.show{display:flex;align-items:center;justify-content:space-around;gap:20px;padding:0 20px}
     /* Balloons */
-    .balloons-wrapper{display:flex;gap:15px;flex-wrap:wrap;justify-content:center;align-items:center;flex:0 1 auto}
-    .balloon{width:50px;height:65px;border-radius:50% 50% 50% 50%;position:relative;cursor:pointer;pointer-events:auto;transition:transform .1s;animation:float 3s ease-in-out infinite}
+    .balloons-wrapper{display:flex;gap:25px;flex-wrap:wrap;justify-content:center;align-items:center;flex:0 1 auto}
+    .balloon{width:80px;height:105px;border-radius:50% 50% 50% 50%;position:relative;cursor:pointer;pointer-events:auto;transition:transform .1s;animation:float 3s ease-in-out infinite}
     .balloon:hover{transform:scale(1.08)}
     .balloon.red{background:linear-gradient(135deg,#ff4444,#ff6b6b)}
     .balloon.blue{background:linear-gradient(135deg,#4488ff,#6ba3ff)}
     .balloon.yellow{background:linear-gradient(135deg,#ffdd00,#ffee33)}
     .balloon.green{background:linear-gradient(135deg,#44ff88,#66ffaa)}
     .balloon.purple{background:linear-gradient(135deg,#cc66ff,#ee88ff)}
-    .balloon::before{content:'';position:absolute;bottom:-30px;left:50%;width:2px;height:30px;background:#ddd;transform:translateX(-50%)}
+    .balloon::before{content:'';position:absolute;bottom:-50px;left:50%;width:3px;height:50px;background:#ddd;transform:translateX(-50%)}
     @keyframes float{0%,100%{transform:translateY(0px)}50%{transform:translateY(-20px)}}
     .balloon.pop{animation:popBalloon .6s ease-out forwards}
     @keyframes popBalloon{0%{transform:scale(1) rotate(0deg) translateY(0)}50%{opacity:0.7}100%{transform:scale(0) rotate(180deg) translateY(-100px);opacity:0}}
@@ -80,7 +80,7 @@
     .polaroid img{width:100%;height:160px;object-fit:cover;border-radius:8px}
     figcaption{font-size:13px;color:#7e5f78}
     /* Gift */
-    .gift-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:60px}
+    .gift-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);pointer-events:auto;z-index:30}
     .gift-box{width:150px;height:120px;position:relative;cursor:pointer;transition:transform .2s}
     .gift-box .lid{position:absolute;inset:0 0 60px 0;background:linear-gradient(135deg,#ffdfe9,#ffcce0);border-radius:12px 12px 6px 6px}
     .gift-box .box{position:absolute;left:0;right:0;bottom:0;height:64px;background:linear-gradient(135deg,#fff6f8,#fff1f5);border-radius:6px}
@@ -103,7 +103,7 @@
     /* Confetti pieces (DOM) */
     .confetti-piece{position:fixed;pointer-events:none;border-radius:2px;z-index:10000}
     /* Responsive */
-    @media (max-width:600px){ .hero h2{font-size:24px} .polaroid img{height:130px} .gift-box{width:120px;height:100px} .birthday-banner{padding:20px 30px}.birthday-banner h2{font-size:28px}.cake-message-content{padding:20px;max-width:90%}.btn.gallery{padding:12px 24px;font-size:14px}.gift-wrap{margin-top:40px}}
+    @media (max-width:600px){ .hero h2{font-size:24px} .polaroid img{height:130px} .gift-box{width:120px;height:100px} .birthday-banner{padding:20px 30px}.birthday-banner h2{font-size:28px}.cake-message-content{padding:20px;max-width:90%}.btn.gallery{padding:12px 24px;font-size:14px}.balloon{width:60px;height:80px}.balloons-wrapper{gap:15px}}
   </style>
 </head>
 <body>
@@ -160,6 +160,18 @@
       <h3 id="cakeMessageTitle">A Sweet Message</h3>
       <p id="cakeMessageText"></p>
       <button class="close-cake-message" onclick="document.getElementById('cakeMessageModal').style.display='none'">Close</button>
+    </div>
+  </div>
+
+  <!-- Gift Box Fixed at Bottom -->
+  <div id="giftWrapper" class="gift-wrap" style="display:none">
+    <div id="giftBox" class="gift-box" role="button" tabindex="0" aria-label="Open gift box">
+      <div class="lid"></div><div class="box"></div><div class="ribbon"></div>
+    </div>
+    <div id="giftReveal" class="surprise glass hidden" style="display:none">
+      <h4 style="margin:0">Surprise!</h4>
+      <p id="surpriseText" style="margin:6px 0">Parina — you're my shining star. Wishing you a year of joy.</p>
+      <button id="giftClose" class="btn">Close</button>
     </div>
   </div>
 
@@ -232,20 +244,6 @@
         </div>
       </section>
 
-      <section id="gift" style="margin-top:20px">
-        <h3 class="section-title">A Little Box of Joy</h3>
-        <div class="gift-wrap">
-          <div id="giftBox" class="gift-box" role="button" tabindex="0" aria-label="Open gift box">
-            <div class="lid"></div><div class="box"></div><div class="ribbon"></div>
-          </div>
-          <div id="giftReveal" class="surprise glass hidden" style="margin-top:8px; display:none">
-            <h4 style="margin:0">Surprise!</h4>
-            <p id="surpriseText" style="margin:6px 0">Parina — you're my shining star. Wishing you a year of joy.</p>
-            <button id="giftClose" class="btn">Close</button>
-          </div>
-        </div>
-      </section>
-
       <section id="smile" style="margin-top:20px">
         <h3 class="section-title">Click for a Smile</h3>
         <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
@@ -254,7 +252,7 @@
         </div>
       </section>
 
-      <section id="finale" style="margin-top:20px">
+      <section id="finale" style="margin-top:20px;margin-bottom:200px">
         <h3 class="section-title">Finale</h3>
         <div style="text-align:center;margin-bottom:36px">
           <button id="finaleBtn" class="btn primary">Celebrate 🎆</button>
@@ -307,6 +305,7 @@
       const giftBox = document.getElementById('giftBox');
       const giftReveal = document.getElementById('giftReveal');
       const giftClose = document.getElementById('giftClose');
+      const giftWrapper = document.getElementById('giftWrapper');
       const smileBtn = document.getElementById('smileBtn');
       const smileToast = document.getElementById('smileToast');
       const heartBtn = document.getElementById('heartSecretBtn');
@@ -402,6 +401,7 @@
         try { bgAudio && await bgAudio.play().catch(()=>{}); } catch(e){}
         welcome.style.display = 'none';
         app.style.display = 'block';
+        giftWrapper.style.display = 'flex';
         app.setAttribute('aria-hidden','false');
         decorationsContainer.classList.add('show');
         createBalloons();
