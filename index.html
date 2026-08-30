@@ -15,22 +15,51 @@
       --maxw:1100px;
       --card-radius:16px;
     }
-    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,'Poppins',sans-serif;background:linear-gradient(180deg,var(--bg),#F6F2F8);color:#3b2d3b; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
+    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,'Poppins',sans-serif;background:linear-gradient(180deg,var(--bg),#F6F2F8);color:#3b2d3b; -webkit-font-smoothing:antialiased}
     .center {display:flex;align-items:center;justify-content:center;}
     /* Loader visible briefly */
     #loader {position:fixed;inset:0;display:flex;flex-direction:column;gap:10px;align-items:center;justify-content:center;z-index:9999;color:var(--muted);font-weight:600}
     /* Welcome */
     .welcome {position:fixed;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;z-index:50}
-    .welcome-card {max-width:760px;padding:30px;border-radius:24px;background:linear-gradient(180deg,rgba(255,255,255,0.85),rgba(255,255,255,0.7));box-shadow:0 20px 50px rgba(120,80,100,0.08);border:1px solid rgba(255,255,255,0.6)}
+    .welcome-card {max-width:760px;padding:30px;border-radius:24px;background:linear-gradient(180deg,rgba(255,255,255,0.85),rgba(255,255,255,0.7));box-shadow:0 20px 50px rgba(120,80,100,0.08);border:1px solid rgba(255,255,255,0.5)}
     .welcome h1{font-family:'Dancing Script', cursive; font-size:36px;margin:0 0 8px;color:var(--accent)}
-    .open-btn{margin-top:14px;padding:12px 20px;border-radius:999px;border:none;background:linear-gradient(135deg,var(--accent),#ffb3c9);color:white;font-weight:700;cursor:pointer;box-shadow:0 12px 36px rgba(255,107,150,0.12)}
+    .open-btn{margin-top:14px;padding:12px 20px;border-radius:999px;border:none;background:linear-gradient(135deg,var(--accent),#ffb3c9);color:white;font-weight:700;cursor:pointer;box-shadow:0 12px 36px rgba(255,107,150,0.3)}
+    /* Decorations Container */
+    .decorations-container{position:fixed;inset:0;pointer-events:none;z-index:40;display:none}
+    .decorations-container.show{display:flex;align-items:flex-end;justify-content:space-around;padding-bottom:20px}
+    /* Balloons */
+    .balloon{width:50px;height:65px;border-radius:50% 50% 50% 50%;position:relative;cursor:pointer;pointer-events:auto;transition:transform .1s;animation:float 3s ease-in-out infinite}
+    .balloon:hover{transform:scale(1.08)}
+    .balloon.red{background:linear-gradient(135deg,#ff4444,#ff6b6b)}
+    .balloon.blue{background:linear-gradient(135deg,#4488ff,#6ba3ff)}
+    .balloon.yellow{background:linear-gradient(135deg,#ffdd00,#ffee33)}
+    .balloon.green{background:linear-gradient(135deg,#44ff88,#66ffaa)}
+    .balloon.purple{background:linear-gradient(135deg,#cc66ff,#ee88ff)}
+    .balloon::before{content:'';position:absolute;bottom:-30px;left:50%;width:2px;height:30px;background:#ddd;transform:translateX(-50%)}
+    @keyframes float{0%,100%{transform:translateY(0px)}50%{transform:translateY(-20px)}}
+    .balloon.pop{animation:popBalloon .6s ease-out forwards}
+    @keyframes popBalloon{0%{transform:scale(1) rotate(0deg) translateY(0)}50%{opacity:0.7}100%{transform:scale(0) rotate(180deg) translateY(-100px);opacity:0}}
+    /* Cakes */
+    .cake{display:flex;flex-direction:column;align-items:center;pointer-events:none;animation:sway 2s ease-in-out infinite}
+    .cake-base{width:60px;height:30px;background:linear-gradient(180deg,#ff69b4,#ff1493);border-radius:4px 4px 0 0;position:relative}
+    .cake-base::before{content:'';position:absolute;top:0;left:0;right:0;height:8px;background:#fff;opacity:0.3;border-radius:4px 4px 0 0}
+    .cake-middle{width:70px;height:28px;background:linear-gradient(180deg,#ffb6c1,#ff69b4);border-radius:4px;margin-top:-8px}
+    .cake-candle{width:3px;height:25px;background:#fff;margin:0 auto -15px;border-radius:2px;position:relative}
+    .cake-flame{width:6px;height:10px;background:radial-gradient(circle,#ffff00,#ff8800);border-radius:50%;position:absolute;top:-10px;left:50%;transform:translateX(-50%);box-shadow:0 0 8px #ff8800}
+    @keyframes sway{0%,100%{transform:translateX(0) rotate(0deg)}50%{transform:translateX(3px) rotate(1deg)}}
+    /* Birthday Banner */
+    .birthday-banner{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:linear-gradient(135deg,#FFD700,#FFA500);padding:30px 50px;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.3);z-index:9998;animation:slideInBanner .6s ease-out;border:3px solid #FFE4B5}
+    .birthday-banner h2{font-family:'Dancing Script',cursive;font-size:42px;margin:0;color:#fff;text-shadow:2px 2px 4px rgba(0,0,0,0.2)}
+    .birthday-banner p{font-size:18px;margin:8px 0 0;color:#fff;text-shadow:1px 1px 2px rgba(0,0,0,0.1)}
+    @keyframes slideInBanner{0%{transform:translate(-50%,-50%) scale(0);opacity:0}50%{transform:translate(-50%,-50%) scale(1.05)}100%{transform:translate(-50%,-50%) scale(1);opacity:1}}
+    .banner-hidden{display:none}
     /* App */
     .app{display:none;padding-bottom:80px;min-height:100vh;position:relative;z-index:10}
     .topbar{position:sticky;top:10px;background:transparent;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;max-width:var(--maxw);margin:12px auto}
     .brand{display:flex;align-items:center;gap:12px}
     .logo{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#ffb3c9);display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff}
     .hero{display:flex;align-items:center;justify-content:center;padding:28px 16px}
-    .hero-card{max-width:920px;width:92%;padding:22px;border-radius:var(--card-radius);background:linear-gradient(180deg,rgba(255,255,255,0.9),rgba(255,255,255,0.78));box-shadow:0 20px 40px rgba(120,80,100,0.06);text-align:center;border:1px solid rgba(255,255,255,0.6)}
+    .hero-card{max-width:920px;width:92%;padding:22px;border-radius:var(--card-radius);background:linear-gradient(180deg,rgba(255,255,255,0.9),rgba(255,255,255,0.78));box-shadow:0 20px 40px rgba(120,80,100,0.08);border:1px solid rgba(255,255,255,0.5)}
     .hero h2{font-family: 'Dancing Script', cursive;font-size:30px;margin:0;color:#5b2b4a}
     .sections{max-width:var(--maxw);margin:18px auto;padding:6px 16px}
     .section-title{font-size:18px;text-align:center;color:#5b3f59;margin:8px 0 12px}
@@ -65,7 +94,7 @@
     /* Confetti pieces (DOM) */
     .confetti-piece{position:fixed;pointer-events:none;border-radius:2px;z-index:10000}
     /* Responsive */
-    @media (max-width:600px){ .hero h2{font-size:24px} .polaroid img{height:130px} .gift-box{width:120px;height:100px} }
+    @media (max-width:600px){ .hero h2{font-size:24px} .polaroid img{height:130px} .gift-box{width:120px;height:100px} .birthday-banner{padding:20px 30px}.birthday-banner h2{font-size:28px}.decorations-container{gap:10px;padding-bottom:10px}}
   </style>
 </head>
 <body>
@@ -84,6 +113,37 @@
       </div>
     </div>
   </main>
+
+  <!-- Decorations (Cakes & Balloons) -->
+  <div id="decorationsContainer" class="decorations-container">
+    <div class="cake">
+      <div class="cake-candle"><div class="cake-flame"></div></div>
+      <div class="cake-middle"></div>
+      <div class="cake-base"></div>
+    </div>
+    <div class="cake">
+      <div class="cake-candle"><div class="cake-flame"></div></div>
+      <div class="cake-middle"></div>
+      <div class="cake-base"></div>
+    </div>
+    <div id="balloonsContainer" style="display:flex;gap:15px;flex-wrap:wrap;justify-content:center;align-items:flex-end"></div>
+    <div class="cake">
+      <div class="cake-candle"><div class="cake-flame"></div></div>
+      <div class="cake-middle"></div>
+      <div class="cake-base"></div>
+    </div>
+    <div class="cake">
+      <div class="cake-candle"><div class="cake-flame"></div></div>
+      <div class="cake-middle"></div>
+      <div class="cake-base"></div>
+    </div>
+  </div>
+
+  <!-- Birthday Banner -->
+  <div id="birthdayBanner" class="birthday-banner banner-hidden">
+    <h2>🎉 Wishing you a happiest 15th birthday! 🎉</h2>
+    <p>Hope all your dreams come true!</p>
+  </div>
 
   <!-- App -->
   <div id="app" class="app" role="application" aria-hidden="true">
@@ -216,6 +276,9 @@
       const welcome = document.getElementById('welcome');
       const openBtn = document.getElementById('openBtn');
       const app = document.getElementById('app');
+      const decorationsContainer = document.getElementById('decorationsContainer');
+      const balloonsContainer = document.getElementById('balloonsContainer');
+      const birthdayBanner = document.getElementById('birthdayBanner');
       const playPauseBtn = document.getElementById('playPauseBtn');
       const bgAudio = document.getElementById('bgAudio');
       const volume = document.getElementById('volume');
@@ -233,8 +296,47 @@
       const closeLetter = document.getElementById('closeLetter');
       const finaleBtn = document.getElementById('finaleBtn');
 
+      let balloonsPopped = 0;
+      const totalBalloons = 6;
+      const balloonColors = ['red', 'blue', 'yellow', 'green', 'purple', 'red'];
+
       // remove loader quickly
       setTimeout(()=> loader && loader.remove(), 300);
+
+      // Create balloons
+      function createBalloons() {
+        balloonsContainer.innerHTML = '';
+        balloonsPopped = 0;
+        balloonColors.forEach((color) => {
+          const balloon = document.createElement('div');
+          balloon.className = `balloon ${color}`;
+          balloon.addEventListener('click', (e) => {
+            e.stopPropagation();
+            popBalloon(balloon);
+          });
+          balloonsContainer.appendChild(balloon);
+        });
+      }
+
+      // Pop balloon and check if all are popped
+      function popBalloon(balloon) {
+        balloon.classList.add('pop');
+        balloon.style.pointerEvents = 'none';
+        balloonsPopped++;
+        confettiBurst(30);
+        if (balloonsPopped === totalBalloons) {
+          showBirthdayBanner();
+        }
+      }
+
+      // Show birthday banner
+      function showBirthdayBanner() {
+        birthdayBanner.classList.remove('banner-hidden');
+        confettiBurst(180);
+        setTimeout(() => {
+          birthdayBanner.classList.add('banner-hidden');
+        }, 4000);
+      }
 
       // Open app
       openBtn && openBtn.addEventListener('click', async () => {
@@ -242,6 +344,8 @@
         welcome.style.display = 'none';
         app.style.display = 'block';
         app.setAttribute('aria-hidden','false');
+        decorationsContainer.classList.add('show');
+        createBalloons();
         confettiBurst(36);
         document.getElementById('hero') && document.getElementById('hero').scrollIntoView({behavior:'smooth'});
       });
