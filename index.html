@@ -26,7 +26,7 @@
     .open-btn{margin-top:14px;padding:12px 20px;border-radius:999px;border:none;background:linear-gradient(135deg,var(--accent),#ffb3c9);color:white;font-weight:700;cursor:pointer;box-shadow:0 12px 36px rgba(255,107,150,0.3)}
     /* Decorations Container */
     .decorations-container{position:fixed;inset:0;pointer-events:none;z-index:40;display:none}
-    .decorations-container.show{display:flex;align-items:flex-end;justify-content:space-around;padding-bottom:20px}
+    .decorations-container.show{display:flex;align-items:flex-start;justify-content:space-around;padding-top:80px;padding-bottom:20px}
     /* Balloons */
     .balloon{width:50px;height:65px;border-radius:50% 50% 50% 50%;position:relative;cursor:pointer;pointer-events:auto;transition:transform .1s;animation:float 3s ease-in-out infinite}
     .balloon:hover{transform:scale(1.08)}
@@ -40,7 +40,8 @@
     .balloon.pop{animation:popBalloon .6s ease-out forwards}
     @keyframes popBalloon{0%{transform:scale(1) rotate(0deg) translateY(0)}50%{opacity:0.7}100%{transform:scale(0) rotate(180deg) translateY(-100px);opacity:0}}
     /* Cakes */
-    .cake{display:flex;flex-direction:column;align-items:center;pointer-events:none;animation:sway 2s ease-in-out infinite}
+    .cake{display:flex;flex-direction:column;align-items:center;pointer-events:auto;animation:sway 2s ease-in-out infinite;cursor:pointer;transition:transform .2s}
+    .cake:hover{transform:scale(1.08)}
     .cake-base{width:60px;height:30px;background:linear-gradient(180deg,#ff69b4,#ff1493);border-radius:4px 4px 0 0;position:relative}
     .cake-base::before{content:'';position:absolute;top:0;left:0;right:0;height:8px;background:#fff;opacity:0.3;border-radius:4px 4px 0 0}
     .cake-middle{width:70px;height:28px;background:linear-gradient(180deg,#ffb6c1,#ff69b4);border-radius:4px;margin-top:-8px}
@@ -53,6 +54,12 @@
     .birthday-banner p{font-size:18px;margin:8px 0 0;color:#fff;text-shadow:1px 1px 2px rgba(0,0,0,0.1)}
     @keyframes slideInBanner{0%{transform:translate(-50%,-50%) scale(0);opacity:0}50%{transform:translate(-50%,-50%) scale(1.05)}100%{transform:translate(-50%,-50%) scale(1);opacity:1}}
     .banner-hidden{display:none}
+    /* Cake Message Modal */
+    .cake-message-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);z-index:9999}
+    .cake-message-content{background:linear-gradient(180deg,#FFF9F5,#FFF7F1);padding:30px;border-radius:20px;max-width:600px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);border:2px solid #FFE4B5}
+    .cake-message-content h3{font-family:'Dancing Script',cursive;font-size:28px;color:#FF6B96;margin:0 0 15px}
+    .cake-message-content p{font-size:16px;color:#6b5166;line-height:1.6;margin:15px 0}
+    .close-cake-message{padding:10px 20px;border-radius:999px;border:none;background:linear-gradient(135deg,#FF6B96,#ffb3c9);color:white;font-weight:700;cursor:pointer;margin-top:15px}
     /* App */
     .app{display:none;padding-bottom:80px;min-height:100vh;position:relative;z-index:10}
     .topbar{position:sticky;top:10px;background:transparent;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;max-width:var(--maxw);margin:12px auto}
@@ -81,6 +88,7 @@
     /* Buttons */
     .btn{padding:8px 12px;border-radius:12px;border:none;background:#fff;cursor:pointer}
     .btn.primary{background:linear-gradient(135deg,var(--accent),#ffb3c9);color:#fff;font-weight:700}
+    .btn.gallery{padding:14px 28px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--accent),#ffb3c9);color:#fff;font-weight:700;cursor:pointer;font-size:16px}
     .big-btn{padding:12px 18px;border-radius:999px;background:linear-gradient(135deg,#ff9fb9,#ffd9e8);border:none;cursor:pointer;font-weight:700}
     .toast{padding:10px;border-radius:10px;background:#fff;box-shadow:0 8px 20px rgba(0,0,0,0.06);display:inline-block}
     /* Lightbox */
@@ -94,7 +102,7 @@
     /* Confetti pieces (DOM) */
     .confetti-piece{position:fixed;pointer-events:none;border-radius:2px;z-index:10000}
     /* Responsive */
-    @media (max-width:600px){ .hero h2{font-size:24px} .polaroid img{height:130px} .gift-box{width:120px;height:100px} .birthday-banner{padding:20px 30px}.birthday-banner h2{font-size:28px}.decorations-container{gap:10px;padding-bottom:10px}}
+    @media (max-width:600px){ .hero h2{font-size:24px} .polaroid img{height:130px} .gift-box{width:120px;height:100px} .birthday-banner{padding:20px 30px}.birthday-banner h2{font-size:28px}.decorations-container{gap:10px;padding-top:40px}.cake-message-content{padding:20px;max-width:90%}.btn.gallery{padding:12px 24px;font-size:14px}}
   </style>
 </head>
 <body>
@@ -116,23 +124,23 @@
 
   <!-- Decorations (Cakes & Balloons) -->
   <div id="decorationsContainer" class="decorations-container">
-    <div class="cake">
+    <div class="cake" data-cake="1">
       <div class="cake-candle"><div class="cake-flame"></div></div>
       <div class="cake-middle"></div>
       <div class="cake-base"></div>
     </div>
-    <div class="cake">
+    <div class="cake" data-cake="2">
       <div class="cake-candle"><div class="cake-flame"></div></div>
       <div class="cake-middle"></div>
       <div class="cake-base"></div>
     </div>
-    <div id="balloonsContainer" style="display:flex;gap:15px;flex-wrap:wrap;justify-content:center;align-items:flex-end"></div>
-    <div class="cake">
+    <div id="balloonsContainer" style="display:flex;gap:15px;flex-wrap:wrap;justify-content:center;align-items:flex-start"></div>
+    <div class="cake" data-cake="3">
       <div class="cake-candle"><div class="cake-flame"></div></div>
       <div class="cake-middle"></div>
       <div class="cake-base"></div>
     </div>
-    <div class="cake">
+    <div class="cake" data-cake="4">
       <div class="cake-candle"><div class="cake-flame"></div></div>
       <div class="cake-middle"></div>
       <div class="cake-base"></div>
@@ -143,6 +151,15 @@
   <div id="birthdayBanner" class="birthday-banner banner-hidden">
     <h2>🎉 Wishing you a happiest 15th birthday! 🎉</h2>
     <p>Hope all your dreams come true!</p>
+  </div>
+
+  <!-- Cake Message Modal -->
+  <div id="cakeMessageModal" class="cake-message-modal">
+    <div class="cake-message-content">
+      <h3 id="cakeMessageTitle">A Sweet Message</h3>
+      <p id="cakeMessageText"></p>
+      <button class="close-cake-message" onclick="document.getElementById('cakeMessageModal').style.display='none'">Close</button>
+    </div>
   </div>
 
   <!-- App -->
@@ -166,8 +183,7 @@
         <h2>Happy Birthday, <span id="heroName">Parina Bandariya</span> ❤️</h2>
         <p style="color:#6f566a">Open, read, and enjoy — made just for you.</p>
         <div style="margin-top:12px;display:flex;gap:10px;justify-content:center">
-          <button id="celebrateBtn" class="btn primary">Celebrate Now 🎉</button>
-          <button id="galleryJump" class="btn">View Memories</button>
+          <button id="galleryJump" class="btn gallery">View Memories 📸</button>
         </div>
       </div>
     </section>
@@ -279,6 +295,7 @@
       const decorationsContainer = document.getElementById('decorationsContainer');
       const balloonsContainer = document.getElementById('balloonsContainer');
       const birthdayBanner = document.getElementById('birthdayBanner');
+      const cakeMessageModal = document.getElementById('cakeMessageModal');
       const playPauseBtn = document.getElementById('playPauseBtn');
       const bgAudio = document.getElementById('bgAudio');
       const volume = document.getElementById('volume');
@@ -295,6 +312,27 @@
       const secretLetter = document.getElementById('secretLetter');
       const closeLetter = document.getElementById('closeLetter');
       const finaleBtn = document.getElementById('finaleBtn');
+      const galleryJump = document.getElementById('galleryJump');
+
+      // Cake messages
+      const cakeMessages = {
+        1: {
+          title: "Parina's Brilliance ✨",
+          text: "Your intelligence and quick wit never cease to amaze me. You solve problems with such grace and creativity. Happy 15th birthday to the smartest cookie I know!"
+        },
+        2: {
+          title: "Parina's Kindness 💖",
+          text: "The way you care for those around you is truly special. Your compassion and empathy make the world a better place. Thank you for being such a beautiful soul."
+        },
+        3: {
+          title: "Parina's Strength 💪",
+          text: "You face challenges with courage and determination. Your resilience inspires everyone around you. Turning 15 and already showing the strength of a true warrior!"
+        },
+        4: {
+          title: "Parina's Joy 🌟",
+          text: "Your laughter is contagious and your smile lights up every room. You bring happiness wherever you go. Here's to 15 years of spreading joy and happiness!"
+        }
+      };
 
       let balloonsPopped = 0;
       const totalBalloons = 6;
@@ -338,6 +376,26 @@
         }, 4000);
       }
 
+      // Cake click handler
+      document.querySelectorAll('.cake').forEach(cake => {
+        cake.addEventListener('click', (e) => {
+          const cakeNum = cake.getAttribute('data-cake');
+          const msg = cakeMessages[cakeNum];
+          if(msg) {
+            document.getElementById('cakeMessageTitle').textContent = msg.title;
+            document.getElementById('cakeMessageText').textContent = msg.text;
+            cakeMessageModal.style.display = 'flex';
+          }
+        });
+      });
+
+      // Close cake message modal on background click
+      cakeMessageModal.addEventListener('click', (e) => {
+        if(e.target === cakeMessageModal) {
+          cakeMessageModal.style.display = 'none';
+        }
+      });
+
       // Open app
       openBtn && openBtn.addEventListener('click', async () => {
         try { bgAudio && await bgAudio.play().catch(()=>{}); } catch(e){}
@@ -348,6 +406,14 @@
         createBalloons();
         confettiBurst(36);
         document.getElementById('hero') && document.getElementById('hero').scrollIntoView({behavior:'smooth'});
+      });
+
+      // Gallery jump button
+      galleryJump && galleryJump.addEventListener('click', () => {
+        const gallery = document.getElementById('gallery');
+        if(gallery) {
+          gallery.scrollIntoView({behavior:'smooth'});
+        }
       });
 
       // audio controls (safe if audio file missing)
@@ -413,7 +479,11 @@
 
       // keyboard escape
       document.addEventListener('keydown', (e) => {
-        if(e.key === 'Escape') { closeLightbox(); if (secretLetter) secretLetter.style.display = 'none'; }
+        if(e.key === 'Escape') { 
+          closeLightbox(); 
+          if (secretLetter) secretLetter.style.display = 'none';
+          if (cakeMessageModal) cakeMessageModal.style.display = 'none';
+        }
       });
 
       // simple DOM confetti (no canvas) — safe and visible
