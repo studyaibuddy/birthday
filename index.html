@@ -25,9 +25,10 @@
     .welcome h1{font-family:'Dancing Script', cursive; font-size:36px;margin:0 0 8px;color:var(--accent)}
     .open-btn{margin-top:14px;padding:12px 20px;border-radius:999px;border:none;background:linear-gradient(135deg,var(--accent),#ffb3c9);color:white;font-weight:700;cursor:pointer;box-shadow:0 12px 36px rgba(255,107,150,0.3)}
     /* Decorations Container */
-    .decorations-container{position:fixed;left:0;right:0;top:0;pointer-events:none;z-index:40;display:none;padding-top:20px;padding-bottom:20px}
-    .decorations-container.show{display:flex;align-items:flex-start;justify-content:space-around;gap:20px}
+    .decorations-container{position:fixed;left:0;right:0;top:50%;transform:translateY(-50%);pointer-events:none;z-index:40;display:none;width:100%}
+    .decorations-container.show{display:flex;align-items:center;justify-content:space-around;gap:20px;padding:0 20px}
     /* Balloons */
+    .balloons-wrapper{display:flex;gap:15px;flex-wrap:wrap;justify-content:center;align-items:center;flex:0 1 auto}
     .balloon{width:50px;height:65px;border-radius:50% 50% 50% 50%;position:relative;cursor:pointer;pointer-events:auto;transition:transform .1s;animation:float 3s ease-in-out infinite}
     .balloon:hover{transform:scale(1.08)}
     .balloon.red{background:linear-gradient(135deg,#ff4444,#ff6b6b)}
@@ -79,7 +80,7 @@
     .polaroid img{width:100%;height:160px;object-fit:cover;border-radius:8px}
     figcaption{font-size:13px;color:#7e5f78}
     /* Gift */
-    .gift-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:20px}
+    .gift-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:60px}
     .gift-box{width:150px;height:120px;position:relative;cursor:pointer;transition:transform .2s}
     .gift-box .lid{position:absolute;inset:0 0 60px 0;background:linear-gradient(135deg,#ffdfe9,#ffcce0);border-radius:12px 12px 6px 6px}
     .gift-box .box{position:absolute;left:0;right:0;bottom:0;height:64px;background:linear-gradient(135deg,#fff6f8,#fff1f5);border-radius:6px}
@@ -102,7 +103,7 @@
     /* Confetti pieces (DOM) */
     .confetti-piece{position:fixed;pointer-events:none;border-radius:2px;z-index:10000}
     /* Responsive */
-    @media (max-width:600px){ .hero h2{font-size:24px} .polaroid img{height:130px} .gift-box{width:120px;height:100px} .birthday-banner{padding:20px 30px}.birthday-banner h2{font-size:28px}.decorations-container{gap:10px;padding-top:10px}.cake-message-content{padding:20px;max-width:90%}.btn.gallery{padding:12px 24px;font-size:14px}}
+    @media (max-width:600px){ .hero h2{font-size:24px} .polaroid img{height:130px} .gift-box{width:120px;height:100px} .birthday-banner{padding:20px 30px}.birthday-banner h2{font-size:28px}.cake-message-content{padding:20px;max-width:90%}.btn.gallery{padding:12px 24px;font-size:14px}.gift-wrap{margin-top:40px}}
   </style>
 </head>
 <body>
@@ -134,7 +135,7 @@
       <div class="cake-middle"></div>
       <div class="cake-base"></div>
     </div>
-    <div id="balloonsContainer" style="display:flex;gap:15px;flex-wrap:wrap;justify-content:center;align-items:flex-start;flex:1"></div>
+    <div class="balloons-wrapper" id="balloonsContainer"></div>
     <div class="cake" data-cake="3">
       <div class="cake-candle"><div class="cake-flame"></div></div>
       <div class="cake-middle"></div>
