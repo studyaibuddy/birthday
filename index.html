@@ -17,42 +17,108 @@
     .center {display:flex;align-items:center;justify-content:center;}
     #loader {position:fixed;inset:0;display:flex;flex-direction:column;gap:10px;align-items:center;justify-content:center;z-index:9999;color:var(--muted);font-weight:600}
     .welcome {position:fixed;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;z-index:50}
-    .welcome-card {max-width:760px;padding:30px;border-radius:24px;background:linear-gradient(180deg,rgba(255,255,255,0.85),rgba(255,255,255,0.7));box-shadow:0 20px 50px rgba(120,80,100,0.08);border:1px solid rgba(255,200,220,0.4)}
+    .welcome-card {max-width:760px;padding:30px;border-radius:24px;background:linear-gradient(180deg,rgba(255,255,255,0.85),rgba(255,255,255,0.7));box-shadow:0 20px 50px rgba(120,80,100,0.08);border:1px solid rgba(255,255,255,0.6)}
     .welcome h1{font-family:'Dancing Script', cursive; font-size:36px;margin:0 0 8px;color:var(--accent)}
-    .open-btn{margin-top:14px;padding:12px 20px;border-radius:999px;border:none;background:linear-gradient(135deg,var(--accent),#ffb3c9);color:white;font-weight:700;cursor:pointer;box-shadow:0 12px 36px rgba(255,107,150,0.25);transition:all .3s}
+    .open-btn{margin-top:14px;padding:12px 20px;border-radius:999px;border:none;background:linear-gradient(135deg,var(--accent),#ffb3c9);color:white;font-weight:700;cursor:pointer;box-shadow:0 12px 36px rgba(255,107,150,0.18)}
     .open-btn:hover{transform:scale(1.06)}
-    .decorations-container{position:fixed;left:0;right:0;top:50%;transform:translateY(-50%);pointer-events:none;z-index:40;display:none;width:100%}
-    .decorations-container.show{display:flex;align-items:center;justify-content:space-around;gap:20px;padding:0 20px}
-    .balloons-wrapper{display:flex;gap:25px;flex-wrap:wrap;justify-content:center;align-items:center;flex:0 1 auto}
-    .balloon{width:80px;height:105px;border-radius:50% 50% 50% 50%;position:relative;cursor:pointer;pointer-events:auto;transition:transform .1s;animation:float 3s ease-in-out infinite}
-    .balloon:hover{transform:scale(1.08)}
-    .balloon.red{background:linear-gradient(135deg,#ff4444,#ff6b6b)}
-    .balloon.blue{background:linear-gradient(135deg,#4488ff,#6ba3ff)}
-    .balloon.yellow{background:linear-gradient(135deg,#ffdd00,#ffee33)}
-    .balloon.green{background:linear-gradient(135deg,#44ff88,#66ffaa)}
-    .balloon.purple{background:linear-gradient(135deg,#cc66ff,#ee88ff)}
-    .balloon::before{content:'';position:absolute;bottom:-50px;left:50%;width:3px;height:50px;background:#ddd;transform:translateX(-50%)}
-    @keyframes float{0%,100%{transform:translateY(0px)}50%{transform:translateY(-20px)}}
-    .balloon.pop{animation:popBalloon .6s ease-out forwards}
-    @keyframes popBalloon{0%{transform:scale(1) rotate(0deg) translateY(0)}50%{opacity:0.7}100%{transform:scale(0) rotate(180deg) translateY(-100px);opacity:0}}
-    .cake{display:flex;flex-direction:column;align-items:center;pointer-events:auto;animation:sway 2s ease-in-out infinite;cursor:pointer;transition:transform .2s}
-    .cake:hover{transform:scale(1.08)}
-    .cake-base{width:60px;height:30px;background:linear-gradient(180deg,#ff69b4,#ff1493);border-radius:4px 4px 0 0;position:relative}
-    .cake-base::before{content:'';position:absolute;top:0;left:0;right:0;height:8px;background:#fff;opacity:0.3;border-radius:4px 4px 0 0}
-    .cake-middle{width:70px;height:28px;background:linear-gradient(180deg,#ffb6c1,#ff69b4);border-radius:4px;margin-top:-8px}
-    .cake-candle{width:3px;height:25px;background:#fff;margin:0 auto -15px;border-radius:2px;position:relative}
-    .cake-flame{width:6px;height:10px;background:radial-gradient(circle,#ffff00,#ff8800);border-radius:50%;position:absolute;top:-10px;left:50%;transform:translateX(-50%);box-shadow:0 0 8px #ff8800}
-    @keyframes sway{0%,100%{transform:translateX(0) rotate(0deg)}50%{transform:translateX(3px) rotate(1deg)}}
+    .decorations-container{position:fixed;left:0;right:0;top:50%;transform:translateY(-50%);pointer-events:none;z-index:40;display:none;width:100%;padding:0 20px}
+    .decorations-container.show{display:flex;align-items:center;justify-content:center;gap:80px;flex-wrap:wrap}
+    .balloons-wrapper{display:flex;gap:70px;flex-wrap:wrap;justify-content:center;align-items:center;flex:0 1 auto}
+    
+    /* ULTRA-REALISTIC 3D BALLOONS */
+    .balloon{position:relative;cursor:pointer;pointer-events:auto;filter:drop-shadow(0 15px 35px rgba(0,0,0,0.3));animation:balloonFloat 4.5s ease-in-out infinite;width:120px;height:155px;display:flex;align-items:flex-start;justify-content:center}
+    .balloon:hover{transform:scale(1.05)}
+    
+    /* Main balloon sphere - photorealistic */
+    .balloon-sphere{width:110px;height:135px;border-radius:50% 50% 50% 48%;position:relative;
+      background:radial-gradient(circle at 28% 28%, rgba(255,255,255,0.9), rgba(255,255,255,0.4) 15%, transparent 50%),
+                radial-gradient(circle at 65% 65%, rgba(0,0,0,0.15), transparent 60%),
+                radial-gradient(ellipse at 50% 50%, var(--balloon-color-light), var(--balloon-color-mid) 35%, var(--balloon-color-dark) 100%);
+      box-shadow:
+        inset -15px -20px 40px rgba(0,0,0,0.25),
+        inset 16px 18px 35px rgba(255,255,255,0.45),
+        inset -8px -10px 20px rgba(0,0,0,0.12),
+        0 20px 50px rgba(0,0,0,0.25);
+      animation:balloonBob 3s ease-in-out infinite}
+    
+    /* Primary glossy highlight */
+    .balloon-highlight1{position:absolute;width:35px;height:48px;
+      background:radial-gradient(ellipse 65% 55% at 35% 35%, rgba(255,255,255,0.85), rgba(255,255,255,0.35) 45%, transparent 75%);
+      border-radius:50%;top:6%;left:10%;filter:blur(1px);pointer-events:none;opacity:0.95}
+    
+    /* Secondary mid-tone highlight */
+    .balloon-highlight2{position:absolute;width:22px;height:30px;
+      background:radial-gradient(ellipse 50% 45% at 45% 40%, rgba(255,255,255,0.5), rgba(255,255,255,0.15) 50%, transparent 80%);
+      border-radius:50%;top:18%;right:12%;filter:blur(2px);pointer-events:none;opacity:0.7}
+    
+    /* Shadow highlight for depth */
+    .balloon-shadow-light{position:absolute;width:28px;height:35px;
+      background:radial-gradient(ellipse at 40% 50%, rgba(0,0,0,0.08), transparent 65%);
+      border-radius:50%;bottom:20%;left:8%;filter:blur(3px);pointer-events:none;opacity:0.6}
+    
+    /* Balloon strings - more realistic */
+    .balloon-string{position:absolute;bottom:-85px;left:50%;width:2px;height:85px;
+      background:linear-gradient(180deg, rgba(220,220,220,0.8) 0%, rgba(180,180,180,0.6) 40%, rgba(150,150,150,0.4) 100%);
+      transform:translateX(-50%);pointer-events:none;border-radius:2px;
+      box-shadow:1px 0 2px rgba(0,0,0,0.1)}
+    
+    /* String curls for realism */
+    .balloon-string::before{content:'';position:absolute;width:1.5px;height:42px;background:inherit;left:-10px;bottom:5px;transform:rotate(-25deg);border-radius:2px;opacity:0.7}
+    .balloon-string::after{content:'';position:absolute;width:1.5px;height:38px;background:inherit;right:-10px;bottom:10px;transform:rotate(22deg);border-radius:2px;opacity:0.65}
+    
+    /* Red balloon */
+    .balloon.red{--balloon-color-light:#ff8888;--balloon-color-mid:#ff5555;--balloon-color-dark:#cc0000}
+    
+    /* Pink balloon */
+    .balloon.pink{--balloon-color-light:#ffb3d9;--balloon-color-mid:#ff7fb3;--balloon-color-dark:#ff0066}
+    
+    /* Purple balloon */
+    .balloon.purple{--balloon-color-light:#ee99ff;--balloon-color-mid:#dd66ff;--balloon-color-dark:#9900ff}
+    
+    /* Blue balloon */
+    .balloon.blue{--balloon-color-light:#88b3ff;--balloon-color-mid:#6699ff;--balloon-color-dark:#0033ff}
+    
+    @keyframes balloonBob{0%,100%{transform:translateY(0px) rotateZ(-2deg)}50%{transform:translateY(-25px) rotateZ(2deg)}}
+    @keyframes balloonFloat{0%,100%{transform:translateY(0px)}50%{transform:translateY(-25px)}}
+    
+    .balloon.pop .balloon-sphere{animation:popBalloon .8s cubic-bezier(.68, -0.55, .265, 1.55) forwards}
+    .balloon.pop .balloon-string{animation:stringFall 1s ease-in forwards}
+    @keyframes popBalloon{0%{transform:scale(1);opacity:1}25%{transform:scale(1.12) rotate(15deg)}50%{transform:scale(0.8)}100%{transform:scale(0.02) rotate(720deg);opacity:0}}
+    @keyframes stringFall{0%{transform:translateX(-50%) translateY(0) rotate(0deg);opacity:1}100%{transform:translateX(-50%) translateY(180px) rotate(180deg);opacity:0}}
+    
+    /* Balloon sparkle particles (subtle) */
+    .balloon-sparkle{position:absolute;width:6px;height:6px;border-radius:50%;pointer-events:none;opacity:0.9;box-shadow:0 0 8px rgba(255,255,255,0.9);transform:translate(-50%,-50%);animation:floatSpark 2000ms linear infinite}
+    @keyframes floatSpark{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-18px) scale(0.6);opacity:0}}
+
+    /* Gift Box Styles */
+    .gift-box{position:relative;cursor:pointer;pointer-events:auto;width:80px;height:90px;display:flex;flex-direction:column;align-items:center;animation:giftBounce 2.5s ease-in-out infinite;transition:transform .28s ease}
+    .gift-box:hover{transform:scale(1.08)}
+    
+    .gift-box-bow{width:35px;height:12px;background:#FFD700;border-radius:50% 50% 0 0;position:absolute;top:0;z-index:2;box-shadow:0 2px 5px rgba(0,0,0,0.1)}
+    .gift-box-bow::before{content:'';position:absolute;width:8px;height:8px;background:#FFA500;border-radius:50%;top:-3px;left:-10px;box-shadow:16px 0 0 #FFA500}
+    
+    .gift-box-wrap{width:70px;height:35px;background:linear-gradient(180deg,#ff69b4,#ff1493);border-radius:0 0 4px 4px;margin-top:10px;position:relative;box-shadow:inset -2px -2px 4px rgba(0,0,0,0.1),0 8px 18px rgba(0,0,0,0.08)}
+    .gift-box-wrap::before{content:'';position:absolute;width:2px;height:100%;background:rgba(255,255,255,0.3);left:50%;transform:translateX(-50%)}
+    
+    .gift-box-base{width:70px;height:30px;background:linear-gradient(180deg,#ff3388,#dd1166);border-radius:0 0 6px 6px;box-shadow:inset -2px -2px 4px rgba(0,0,0,0.15), 0 2px 6px rgba(0,0,0,0.2)}
+    
+    @keyframes giftBounce{0%,100%{transform:translateY(0px)}50%{transform:translateY(-12px)}}
+    
+    .gift-box.opened .gift-box-bow{animation:bowFly .6s ease-out forwards}
+    .gift-box.opened .gift-box-wrap{animation:boxOpen .7s ease-out forwards}
+    @keyframes bowFly{0%{transform:translateY(0)}100%{transform:translateY(-80px) rotate(360deg);opacity:0}}
+    @keyframes boxOpen{0%{transform:scaleY(1)}100%{transform:scaleY(0.2);opacity:0.3}}
+    
     /* Banner styling for the golden image */
-    .birthday-banner{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.96);padding:18px;border-radius:14px;box-shadow:0 18px 40px rgba(0,0,0,0.15);z-index:10001;display:flex;align-items:center;justify-content:center;animation:slideInBanner .5s ease-out}
+    .birthday-banner{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.96);padding:18px;border-radius:14px;box-shadow:0 18px 40px rgba(0,0,0,0.15);z-index:10001;display:flex;align-items:center;justify-content:center}
     .birthday-banner img{max-width:92vw;max-height:62vh;border-radius:12px;display:block;box-shadow:0 8px 30px rgba(0,0,0,0.12);border:6px solid rgba(255,255,255,0.35)}
-    .birthday-banner .fallback{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;border-radius:12px;background:linear-gradient(135deg,#FFD700,#FFA500);color:#fff;text-align:center}
+    .birthday-banner .fallback{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;border-radius:12px;background:linear-gradient(135deg,#FFD700,#FFA500);color:#fff}
     .birthday-banner h2{font-family:'Dancing Script',cursive;font-size:36px;margin:0;color:#fff;text-shadow:2px 2px 4px rgba(0,0,0,0.15)}
     .birthday-banner p{font-size:15px;margin:6px 0 0;color:#fff;text-shadow:1px 1px 2px rgba(0,0,0,0.08)}
     @keyframes slideInBanner{0%{opacity:0;transform:translate(-50%,-50%) scale(0.86)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
     .banner-hidden{display:none}
     .cake-message-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);z-index:9999}
-    .cake-message-content{background:linear-gradient(180deg,#FFF9F5,#FFF7F1);padding:30px;border-radius:20px;max-width:600px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);border:2px solid rgba(255,107,150,0.2)}
+    .cake-message-content{background:linear-gradient(180deg,#FFF9F5,#FFF7F1);padding:30px;border-radius:20px;max-width:600px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);border:2px solid rgba(255,255,255,0.6)}
     .cake-message-content h3{font-family:'Dancing Script',cursive;font-size:28px;color:#FF6B96;margin:0 0 15px}
     .cake-message-content p{font-size:16px;color:#6b5166;line-height:1.6;margin:15px 0}
     .close-cake-message{padding:10px 20px;border-radius:999px;border:none;background:linear-gradient(135deg,#FF6B96,#ffb3c9);color:white;font-weight:700;cursor:pointer;margin-top:15px}
@@ -61,26 +127,48 @@
     .brand{display:flex;align-items:center;gap:12px}
     .logo{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#ffb3c9);display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff}
     .hero{display:flex;align-items:center;justify-content:center;padding:28px 16px}
-    .hero-card{max-width:920px;width:92%;padding:22px;border-radius:var(--card-radius);background:linear-gradient(180deg,rgba(255,255,255,0.9),rgba(255,255,255,0.78));box-shadow:0 20px 40px rgba(120,80,100,0.05)}
+    .hero-card{max-width:920px;width:92%;padding:22px;border-radius:var(--card-radius);background:linear-gradient(180deg,rgba(255,255,255,0.9),rgba(255,255,255,0.78));box-shadow:0 20px 40px rgba(120,80,100,0.06)}
     .hero h2{font-family: 'Dancing Script', cursive;font-size:30px;margin:0;color:#5b2b4a}
     .sections{max-width:var(--maxw);margin:18px auto;padding:6px 16px}
     .section-title{font-size:18px;text-align:center;color:#5b3f59;margin:8px 0 12px}
     .polaroid-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(160px,1fr));gap:12px;align-items:start}
-    .polaroid{background:#fff;padding:8px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.06);cursor:pointer;display:flex;flex-direction:column;gap:8px}
-    .polaroid img{width:100%;height:160px;object-fit:cover;border-radius:8px}
+    .polaroid{background:#fff;padding:8px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.06);cursor:pointer;display:flex;flex-direction:column;gap:8px;transition:transform .28s ease, box-shadow .28s ease}
+    .polaroid:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(0,0,0,0.09)}
+    .polaroid img{width:100%;height:160px;object-fit:cover;border-radius:8px;transition:opacity .28s ease}
+    .polaroid figcaption{font-size:13px;color:#6b5166}
+    .polaroid .meta{font-size:11px;color:#a07f93}
     .btn{padding:8px 12px;border-radius:12px;border:none;background:#fff;cursor:pointer}
     .btn.primary{background:linear-gradient(135deg,var(--accent),#ffb3c9);color:#fff;font-weight:700}
     .btn.gallery{padding:14px 28px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--accent),#ffb3c9);color:#fff;font-weight:700;cursor:pointer;font-size:16px}
     .big-btn{padding:12px 18px;border-radius:999px;background:linear-gradient(135deg,#ff9fb9,#ffd9e8);border:none;cursor:pointer;font-weight:700}
     .toast{padding:10px;border-radius:10px;background:#fff;box-shadow:0 8px 20px rgba(0,0,0,0.06);display:inline-block}
-    .lightbox{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:9999;padding:12px}
-    .lightbox img{max-width:92%;max-height:86vh;border-radius:10px}
+    .lightbox{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:9999;padding:12px;transition:opacity .26s ease}
+    .lightbox.show{display:flex}
+    .lightbox img{max-width:92%;max-height:86vh;border-radius:10px;opacity:0;transform:scale(.98);transition:opacity .3s ease, transform .3s ease}
+    .lightbox.show img{opacity:1;transform:scale(1)}
     .lightbox .close{position:absolute;right:18px;top:18px;background:transparent;border:none;color:#fff;font-size:20px;cursor:pointer}
+    .lightbox .nav{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:#fff;font-size:28px;background:transparent;border:none;cursor:pointer}
+    .lightbox .nav.right{left:auto;right:18px}
+    .lightbox .caption{position:absolute;bottom:24px;color:#fff;text-align:center;width:100%;font-size:14px}
     .secret-letter{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);z-index:9999}
     .paper{background:linear-gradient(180deg,#FFF9F5,#FFF7F1);padding:18px;border-radius:12px;max-width:720px}
     .handwritten{font-family: 'Dancing Script', cursive;font-size:18px;color:#3b2d3b}
     .confetti-piece{position:fixed;pointer-events:none;border-radius:2px;z-index:10000}
-    @media (max-width:600px){ .hero h2{font-size:24px} .polaroid img{height:130px} .birthday-banner img{max-height:44vh}.cake-message-content{padding:20px} }
+    
+    /* Messages carousel */
+    .messages-carousel{display:flex;gap:12px;align-items:center;justify-content:center}
+    .message-card{min-width:280px;max-width:640px;padding:18px;border-radius:12px;background:linear-gradient(180deg,#fff,#fff7f9);box-shadow:0 20px 60px rgba(0,0,0,0.06);transition:transform .36s cubic-bezier(.22,.9,.3,1),opacity .3s ease;opacity:0;transform:translateY(8px)}
+    .message-card.show{opacity:1;transform:translateY(0)}
+    .msg-controls{display:flex;gap:8px;align-items:center}
+
+    /* Snow (seasonal) */
+    .snowflake{position:fixed;top:-10px;pointer-events:none;z-index:9998;color:#fff;opacity:0.9;font-size:14px;animation:snowFall linear forwards}
+    @keyframes snowFall{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(360deg);opacity:0}}
+
+    .gifts-section{margin-top:40px;margin-bottom:40px;padding:20px 16px}
+    .gifts-grid{display:flex;gap:40px;flex-wrap:wrap;justify-content:center;align-items:center}
+    
+    @media (max-width:600px){ .hero h2{font-size:24px} .polaroid img{height:130px} .birthday-banner img{max-height:44vh}.cake-message-content{padding:20px} .gifts-grid{gap:30px} }
   </style>
 </head>
 <body>
@@ -99,29 +187,7 @@
   </main>
 
   <div id="decorationsContainer" class="decorations-container" aria-hidden="true">
-    <div class="cake" data-cake="1">
-      <div class="cake-candle"><div class="cake-flame"></div></div>
-      <div class="cake-middle"></div>
-      <div class="cake-base"></div>
-    </div>
-    <div class="cake" data-cake="2">
-      <div class="cake-candle"><div class="cake-flame"></div></div>
-      <div class="cake-middle"></div>
-      <div class="cake-base"></div>
-    </div>
-
     <div class="balloons-wrapper" id="balloonsContainer" aria-hidden="false"></div>
-
-    <div class="cake" data-cake="3">
-      <div class="cake-candle"><div class="cake-flame"></div></div>
-      <div class="cake-middle"></div>
-      <div class="cake-base"></div>
-    </div>
-    <div class="cake" data-cake="4">
-      <div class="cake-candle"><div class="cake-flame"></div></div>
-      <div class="cake-middle"></div>
-      <div class="cake-base"></div>
-    </div>
   </div>
 
   <!-- Banner: image will be shown if assets/banner.png exists, otherwise a text fallback is used -->
@@ -161,6 +227,9 @@
           <button id="playPauseBtn" title="Play/pause music">▶️</button>
           <input id="volume" type="range" min="0" max="1" step="0.01" value="0.6" aria-label="Volume">
         </div>
+        <div style="display:flex;gap:8px;align-items:center;margin-left:8px">
+          <button id="seasonToggle" title="Toggle seasonal snow">❄️</button>
+        </div>
       </div>
     </header>
 
@@ -184,11 +253,18 @@
       </section>
 
       <section id="gallery" style="margin-top:20px"><h3 class="section-title">Memory Gallery</h3>
+        <div style="display:flex;justify-content:center;gap:12px;margin-bottom:10px">
+          <div class="msg-controls">
+            <button id="slideshowToggle" class="btn">▶️ Slideshow</button>
+            <button id="prevPhoto" class="btn">◀️</button>
+            <button id="nextPhoto" class="btn">▶️</button>
+          </div>
+        </div>
         <div class="polaroid-grid" role="list">
-          <figure class="polaroid" tabindex="0" role="listitem"><img src="assets/photo1.jpg" alt="Photo 1"><figcaption>Sweet selfie</figcaption></figure>
-          <figure class="polaroid" tabindex="0" role="listitem"><img src="assets/photo2.jpg" alt="Photo 2"><figcaption>Back in the sunshine</figcaption></figure>
-          <figure class="polaroid" tabindex="0" role="listitem"><img src="assets/photo3.jpg" alt="Photo 3"><figcaption>Mischievous moment</figcaption></figure>
-          <figure class="polaroid" tabindex="0" role="listitem"><img src="assets/photo4.jpg" alt="Photo 4"><figcaption>Festival smile</figcaption></figure>
+          <figure class="polaroid" tabindex="0" role="listitem" data-caption="At the beach" data-date="2023-03-14"><img src="assets/photo1.jpg" alt="Photo 1"><figcaption>Sweet selfie</figcaption><div class="meta">Mar 14, 2023</div></figure>
+          <figure class="polaroid" tabindex="0" role="listitem" data-caption="Sunny day out" data-date="2022-08-09"><img src="assets/photo2.jpg" alt="Photo 2"><figcaption>Back in the sunshine</figcaption><div class="meta">Aug 9, 2022</div></figure>
+          <figure class="polaroid" tabindex="0" role="listitem" data-caption="Silly moment" data-date="2021-12-01"><img src="assets/photo3.jpg" alt="Photo 3"><figcaption>Mischievous moment</figcaption><div class="meta">Dec 1, 2021</div></figure>
+          <figure class="polaroid" tabindex="0" role="listitem" data-caption="Festival smile" data-date="2020-11-20"><img src="assets/photo4.jpg" alt="Photo 4"><figcaption>Festival smile</figcaption><div class="meta">Nov 20, 2020</div></figure>
         </div>
       </section>
 
@@ -201,12 +277,28 @@
         </div>
       </section>
 
+      <section id="messages" style="margin-top:20px"><h3 class="section-title">Personalized Wishes</h3>
+        <div style="display:flex;justify-content:center;gap:12px;align-items:center">
+          <div id="messageHolder" class="message-card" aria-live="polite"></div>
+        </div>
+        <div style="display:flex;justify-content:center;margin-top:12px;gap:8px">
+          <button id="prevMsg" class="btn">◀️ Previous</button>
+          <button id="nextMsg" class="btn">Next ▶️</button>
+          <button id="autoMsg" class="btn">▶️ Auto</button>
+        </div>
+      </section>
+
       <section id="smile" style="margin-top:20px">
         <h3 class="section-title">Click for a Smile</h3>
         <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
           <button id="smileBtn" class="big-btn">Click for a Smile 😊</button>
           <div id="smileToast" class="toast hidden" role="status" aria-live="polite" style="display:none"></div>
         </div>
+      </section>
+
+      <section id="gifts" class="gifts-section">
+        <h3 class="section-title">Open Your Gifts 🎁</h3>
+        <div class="gifts-grid" id="giftsContainer"></div>
       </section>
 
       <section id="finale" style="margin-top:20px;margin-bottom:200px">
@@ -219,8 +311,10 @@
 
     <div id="lightbox" class="lightbox" role="dialog" aria-hidden="true">
       <button class="close" id="lightboxClose">✕</button>
+      <button class="nav left" id="lightboxPrev">◀</button>
+      <button class="nav right" id="lightboxNext">▶</button>
       <img id="lightboxImg" src="" alt="">
-      <p id="lightboxCaption" style="color:#fff;margin-top:8px"></p>
+      <p id="lightboxCaption" class="caption" style="display:none"></p>
     </div>
 
     <div id="secretLetter" class="secret-letter" role="dialog" aria-hidden="true">
@@ -244,6 +338,7 @@
       const app = document.getElementById('app');
       const decorationsContainer = document.getElementById('decorationsContainer');
       const balloonsContainer = document.getElementById('balloonsContainer');
+      const giftsContainer = document.getElementById('giftsContainer');
       const birthdayBanner = document.getElementById('birthdayBanner');
       const bannerImage = document.getElementById('bannerImage');
       const bannerFallback = document.getElementById('bannerFallback');
@@ -255,6 +350,9 @@
       const lightbox = document.getElementById('lightbox');
       const lightboxImg = document.getElementById('lightboxImg');
       const lightboxClose = document.getElementById('lightboxClose');
+      const lightboxCaption = document.getElementById('lightboxCaption');
+      const lightboxPrev = document.getElementById('lightboxPrev');
+      const lightboxNext = document.getElementById('lightboxNext');
       const smileBtn = document.getElementById('smileBtn');
       const smileToast = document.getElementById('smileToast');
       const secretLetter = document.getElementById('secretLetter');
@@ -266,33 +364,55 @@
       const giftRevealText = document.getElementById('giftRevealText');
       const giftClose = document.getElementById('giftClose');
 
-      const cakeMessages = {
+      const slideshowToggle = document.getElementById('slideshowToggle');
+      const prevPhotoBtn = document.getElementById('prevPhoto');
+      const nextPhotoBtn = document.getElementById('nextPhoto');
+
+      const prevMsg = document.getElementById('prevMsg');
+      const nextMsg = document.getElementById('nextMsg');
+      const autoMsg = document.getElementById('autoMsg');
+      const messageHolder = document.getElementById('messageHolder');
+
+      const seasonToggle = document.getElementById('seasonToggle');
+
+      const giftMessages = {
         1: { title: "Your Amazing Humor 😄", text: "You have the funniest jokes and the best laugh! Every moment with you is filled with laughter and joy. Thank you for keeping everyone smiling!" },
-        2: { title: "Your Loyal Friendship 🌟", text: "A friend like you is rare and precious. You're always there when we need you, and you make every hangout unforgettable. So grateful to have you!" },
+        2: { title: "Your Loyal Friendship 🌟", text: "A friend like you is rare and precious. You're always there when we need you, and you make every hangout unforgettable. So grateful to have you around!" },
         3: { title: "Your Creative Spirit 🎨", text: "You see the world in such a unique and beautiful way. Your creativity and imagination inspire everyone around you. Keep being your amazing self!" },
         4: { title: "Your Adventurous Soul 🚀", text: "Life is always an adventure with you! You're up for anything and bring excitement to every moment. Here's to 15 years of adventures ahead!" }
       };
 
-      const giftMessages = {
-        1: { title: "A Tiny Treat 🍬", text: "A small token of sweetness — thank you for all the smiles!" },
-        2: { title: "A Memory 📷", text: "Here's to the moments we've captured — more to come!" },
-        3: { title: "A Little Cheer 🎈", text: "A burst of cheer, just like you bring to everyone." },
-        4: { title: "A Promise ✨", text: "For adventures ahead — I'm excited to share them with you." }
-      };
+      // Personalized wishes/messages
+      const wishes = [
+        "Happy birthday, Parina! May this year bring you bright smiles and big dreams.",
+        "We cherish every laugh and every memory — excited for many more together.",
+        "Keep shining — your creativity and kindness make the world better.",
+        "Trust your heart, chase your dreams, and know you're incredibly loved."
+      ];
+      let msgIndex = 0;
+      let autoMsgTimer = null;
 
       let balloonsPopped = 0;
-      const totalBalloons = 6;
-      const balloonColors = ['red','blue','yellow','green','purple','red'];
+      const totalBalloons = 4;
+      const balloonColors = ['red','pink','purple','blue'];
+
+      // Gallery state
+      const galleryItems = Array.from(document.querySelectorAll('.polaroid'));
+      let galleryIndex = 0;
+      let slideshowPlaying = false;
+      let slideshowInterval = null;
+
+      // Seasonal snow state
+      let snowActive = false;
+      let snowInterval = null;
 
       setTimeout(()=> loader && loader.remove(), 300);
 
       // Preload banner image and mark availability
       let bannerAvailable = false;
       if (bannerImage && bannerImage.src) {
-        // If the file is present on the server it'll load and set naturalWidth
         bannerImage.addEventListener('load', () => { if(bannerImage.naturalWidth > 20) bannerAvailable = true; });
         bannerImage.addEventListener('error', () => { bannerAvailable = false; });
-        // If it loaded from cache, check immediately
         if (bannerImage.complete && bannerImage.naturalWidth > 20) bannerAvailable = true;
       }
 
@@ -303,9 +423,67 @@
           const balloon = document.createElement('div');
           balloon.className = `balloon ${color}`;
           balloon.setAttribute('data-balloon', String(idx+1));
+          
+          const sphere = document.createElement('div');
+          sphere.className = 'balloon-sphere';
+
+          // subtle sparkles (two per balloon)
+          for(let s=0;s<2;s++){
+            const sp = document.createElement('div');
+            sp.className = 'balloon-sparkle';
+            sp.style.left = (20 + Math.random()*60) + '%';
+            sp.style.top = (10 + Math.random()*50) + '%';
+            sp.style.background = ['#FFF6EA','#FFD59A','#FFF'][Math.floor(Math.random()*3)];
+            sp.style.animationDuration = (1400 + Math.random()*900) + 'ms';
+            sphere.appendChild(sp);
+          }
+          
+          const highlight1 = document.createElement('div');
+          highlight1.className = 'balloon-highlight1';
+          sphere.appendChild(highlight1);
+          
+          const highlight2 = document.createElement('div');
+          highlight2.className = 'balloon-highlight2';
+          sphere.appendChild(highlight2);
+          
+          const shadowLight = document.createElement('div');
+          shadowLight.className = 'balloon-shadow-light';
+          sphere.appendChild(shadowLight);
+          
+          const string = document.createElement('div');
+          string.className = 'balloon-string';
+          
+          balloon.appendChild(sphere);
+          balloon.appendChild(string);
+          
           balloon.addEventListener('click', (e) => { e.stopPropagation(); popBalloon(balloon); });
           balloonsContainer.appendChild(balloon);
         });
+      }
+
+      function createGifts() {
+        giftsContainer.innerHTML = '';
+        for(let i = 1; i <= 4; i++) {
+          const giftBox = document.createElement('div');
+          giftBox.className = 'gift-box';
+          giftBox.setAttribute('data-gift', String(i));
+          
+          const bow = document.createElement('div');
+          bow.className = 'gift-box-bow';
+          
+          const wrap = document.createElement('div');
+          wrap.className = 'gift-box-wrap';
+          
+          const base = document.createElement('div');
+          base.className = 'gift-box-base';
+          
+          giftBox.appendChild(bow);
+          giftBox.appendChild(wrap);
+          giftBox.appendChild(base);
+          
+          giftBox.addEventListener('click', (e) => { e.stopPropagation(); openGift(giftBox, i); });
+          giftsContainer.appendChild(giftBox);
+        }
       }
 
       function popBalloon(balloon) {
@@ -313,12 +491,27 @@
         balloon.classList.add('pop');
         balloon.style.pointerEvents = 'none';
         balloonsPopped++;
-        confettiBurst(24);
+        confettiBurst(28, ['#FF6B96','#FFD59A','#EADFF9','#FFF6EA','#FFB3C9']);
+        // small celebratory message
+        showCakeMessage('You popped a balloon! 🎈');
         if (balloonsPopped === totalBalloons) showBirthdayBanner();
       }
 
+      function openGift(giftBox, giftNum) {
+        if (giftBox.classList.contains('opened')) return;
+        giftBox.classList.add('opened');
+        giftBox.style.pointerEvents = 'none';
+        const msg = giftMessages[giftNum];
+        if(msg) {
+          document.getElementById('giftRevealTitle').textContent = msg.title;
+          document.getElementById('giftRevealText').textContent = msg.text;
+          giftReveal.style.display = 'flex';
+          giftReveal.setAttribute('aria-hidden','false');
+        }
+        confettiBurst(36, ['#FF6B96','#FFD59A','#EADFF9','#FFF6EA']);
+      }
+
       function showBirthdayBanner() {
-        // Prefer showing the image banner when available
         if (bannerAvailable) {
           bannerImage.style.display = 'block';
           bannerFallback.style.display = 'none';
@@ -327,29 +520,25 @@
           bannerFallback.style.display = 'flex';
         }
         birthdayBanner.classList.remove('banner-hidden');
-        confettiBurst(140);
-        // Hide after 4 seconds
+        confettiBurst(160);
         setTimeout(() => {
           birthdayBanner.classList.add('banner-hidden');
-          // reset banner view
           bannerImage.style.display = 'none';
           bannerFallback.style.display = 'none';
         }, 4000);
       }
 
-      document.querySelectorAll('.cake').forEach(cake => {
-        cake.addEventListener('click', (e) => {
-          const cakeNum = cake.getAttribute('data-cake');
-          const msg = cakeMessages[cakeNum];
-          if(msg) {
-            document.getElementById('cakeMessageTitle').textContent = msg.title;
-            document.getElementById('cakeMessageText').textContent = msg.text;
-            cakeMessageModal.style.display = 'flex';
-          }
-        });
-      });
+      function showCakeMessage(text){
+        const modal = document.getElementById('cakeMessageModal');
+        document.getElementById('cakeMessageText').textContent = text;
+        modal.style.display = 'flex';
+        modal.setAttribute('aria-hidden','false');
+        // auto-hide after a short time
+        setTimeout(()=>{ if(modal) modal.style.display='none'; }, 2200);
+      }
 
       cakeMessageModal.addEventListener('click', (e) => { if(e.target === cakeMessageModal) cakeMessageModal.style.display = 'none'; });
+      giftReveal.addEventListener('click', (e) => { if(e.target === giftReveal) { giftReveal.style.display = 'none'; giftReveal.setAttribute('aria-hidden','true'); } });
 
       openBtn && openBtn.addEventListener('click', async () => {
         try { bgAudio && await bgAudio.play().catch(()=>{}); } catch(e){}
@@ -358,7 +547,8 @@
         app.setAttribute('aria-hidden','false');
         decorationsContainer.classList.add('show');
         createBalloons();
-        confettiBurst(36);
+        createGifts();
+        confettiBurst(42, ['#FF6B96','#EADFF9','#FFF6EA']);
         document.getElementById('hero') && document.getElementById('hero').scrollIntoView({behavior:'smooth'});
       });
 
@@ -371,19 +561,72 @@
       });
       volume && volume.addEventListener('input', (e)=> { if(bgAudio) bgAudio.volume = parseFloat(e.target.value); });
 
-      polaroids.forEach(p => {
-        p.addEventListener('click', () => {
-          const img = p.querySelector('img'); if(!img) return;
-          lightboxImg.src = img.src;
-          lightbox.style.display = 'flex';
-          lightbox.setAttribute('aria-hidden','false');
-        });
+      polaroids.forEach((p, idx) => {
+        p.addEventListener('click', () => { openLightbox(idx); });
         p.addEventListener('keydown', (ev) => { if(ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); p.click(); }});
       });
+
+      function openLightbox(index){
+        stopSlideshow();
+        galleryIndex = Math.max(0, Math.min(index, galleryItems.length-1));
+        const el = galleryItems[galleryIndex];
+        const img = el.querySelector('img');
+        lightboxImg.src = img ? img.src : '';
+        const caption = el.dataset.caption || el.querySelector('figcaption')?.textContent || '';
+        const date = el.dataset.date ? ` • ${el.dataset.date}` : '';
+        lightboxCaption.textContent = caption + date;
+        lightboxCaption.style.display = caption || date ? 'block' : 'none';
+        lightbox.classList.add('show');
+        lightbox.style.display = 'flex';
+        lightbox.setAttribute('aria-hidden','false');
+      }
+
+      function closeLightbox(){ lightbox.classList.remove('show'); lightbox.style.display = 'none'; lightbox.setAttribute('aria-hidden','true'); lightboxImg.src = ''; }
       lightboxClose && lightboxClose.addEventListener('click', closeLightbox);
       lightbox && lightbox.addEventListener('click', (e) => { if(e.target === lightbox) closeLightbox(); });
-      function closeLightbox(){ lightbox.style.display = 'none'; lightbox.setAttribute('aria-hidden','true'); lightboxImg.src = ''; }
 
+      lightboxPrev && lightboxPrev.addEventListener('click', () => { galleryIndex = (galleryIndex-1+galleryItems.length)%galleryItems.length; openLightbox(galleryIndex); });
+      lightboxNext && lightboxNext.addEventListener('click', () => { galleryIndex = (galleryIndex+1)%galleryItems.length; openLightbox(galleryIndex); });
+
+      prevPhotoBtn && prevPhotoBtn.addEventListener('click', () => { galleryIndex = (galleryIndex-1+galleryItems.length)%galleryItems.length; openLightbox(galleryIndex); });
+      nextPhotoBtn && nextPhotoBtn.addEventListener('click', () => { galleryIndex = (galleryIndex+1)%galleryItems.length; openLightbox(galleryIndex); });
+
+      slideshowToggle && slideshowToggle.addEventListener('click', () => { slideshowPlaying ? stopSlideshow() : startSlideshow(); });
+      function startSlideshow(){
+        if(slideshowPlaying) return;
+        slideshowPlaying = true;
+        slideshowToggle.textContent = '⏸️ Slideshow';
+        slideshowInterval = setInterval(()=>{
+          galleryIndex = (galleryIndex+1)%galleryItems.length; openLightbox(galleryIndex);
+        }, 3000);
+      }
+      function stopSlideshow(){
+        slideshowPlaying = false;
+        slideshowToggle.textContent = '▶️ Slideshow';
+        if(slideshowInterval) { clearInterval(slideshowInterval); slideshowInterval = null; }
+      }
+
+      // Personalized messages carousel
+      function showMessage(i){
+        if(i<0) i = wishes.length-1; if(i>=wishes.length) i=0; msgIndex = i;
+        messageHolder.classList.remove('show');
+        // small delay for transition
+        setTimeout(()=>{
+          messageHolder.textContent = wishes[msgIndex];
+          messageHolder.classList.add('show');
+        }, 120);
+      }
+      prevMsg && prevMsg.addEventListener('click', ()=>{ showMessage(msgIndex-1); stopAutoMsg(); });
+      nextMsg && nextMsg.addEventListener('click', ()=>{ showMessage(msgIndex+1); stopAutoMsg(); });
+      autoMsg && autoMsg.addEventListener('click', ()=>{ toggleAutoMsg(); });
+
+      function toggleAutoMsg(){
+        if(autoMsgTimer){ stopAutoMsg(); }
+        else { autoMsg.textContent = '⏸️ Auto'; autoMsgTimer = setInterval(()=>{ showMessage(msgIndex+1); }, 3800); }
+      }
+      function stopAutoMsg(){ if(autoMsgTimer){ clearInterval(autoMsgTimer); autoMsgTimer = null; autoMsg.textContent = '▶️ Auto'; }}
+
+      // Smile button
       const compliments = ["You light up the room.", "Your laugh is my favorite sound.", "You are loved more than you know.", "You are brave and beautiful."];
       smileBtn && smileBtn.addEventListener('click', () => {
         const msg = compliments[Math.floor(Math.random()*compliments.length)];
@@ -394,7 +637,7 @@
       heartOpenBtn && heartOpenBtn.addEventListener('click', () => { if (secretLetter) { secretLetter.style.display = 'flex'; secretLetter.setAttribute('aria-hidden','false'); } });
       closeLetter && closeLetter.addEventListener('click', () => { if (secretLetter) { secretLetter.style.display = 'none'; secretLetter.setAttribute('aria-hidden','true'); } });
 
-      finaleBtn && finaleBtn.addEventListener('click', () => { confettiBurst(260); });
+      finaleBtn && finaleBtn.addEventListener('click', () => { confettiBurst(280); });
 
       document.addEventListener('keydown', (e) => {
         if(e.key === 'Escape') {
@@ -405,7 +648,8 @@
         }
       });
 
-      function confettiBurst(count=80){
+      // Confetti cannon (colors param optional)
+      function confettiBurst(count=80, colors=['#FF6B96','#FFD59A','#EADFF9','#FFF6EA','#FFB3C9']){
         for(let i=0;i<count;i++){
           const el = document.createElement('div');
           el.className = 'confetti-piece';
@@ -413,7 +657,8 @@
           el.style.top = (20 + (Math.random()-0.5)*30) + '%';
           el.style.width = (6 + Math.random()*10) + 'px';
           el.style.height = (6 + Math.random()*10) + 'px';
-          el.style.background = ['#FF6B96','#FFD59A','#EADFF9','#FFF6EA','#FFB3C9'][Math.floor(Math.random()*5)];
+          el.style.background = colors[Math.floor(Math.random()*colors.length)];
+          el.style.borderRadius = (Math.random()>0.5? '2px' : '50%');
           document.body.appendChild(el);
           const tx = (Math.random()-0.5)*300;
           const ty = 300 + Math.random()*400;
@@ -426,26 +671,50 @@
         }
       }
 
-      const storyItems = document.querySelectorAll('.story-item');
-      const obs = new IntersectionObserver((entries, o) => {
-        entries.forEach(entry => {
-          if(entry.isIntersecting){
-            const dest = entry.target.querySelector('.typewriter');
-            const text = entry.target.getAttribute('data-text') || '';
-            if(dest && !dest.dataset.typed){
-              let i=0;
-              const timer = setInterval(()=> {
-                dest.textContent += text.charAt(i) || '';
-                i++;
-                if(i>text.length) clearInterval(timer);
-              }, 28);
-              dest.dataset.typed = '1';
-            }
-            o.unobserve(entry.target);
-          }
-        });
-      }, {threshold:0.4});
-      storyItems.forEach(it => obs.observe(it));
+      // Seasonal snow
+      seasonToggle && seasonToggle.addEventListener('click', ()=>{ toggleSnow(); });
+      function toggleSnow(){
+        snowActive = !snowActive;
+        seasonToggle.textContent = snowActive ? '🌨️' : '❄️';
+        if(snowActive){ startSnow(); } else { stopSnow(); }
+      }
+      function startSnow(){
+        if(snowInterval) return;
+        snowInterval = setInterval(()=>{
+          const flake = document.createElement('div');
+          flake.className = 'snowflake';
+          flake.textContent = '❄';
+          flake.style.left = (Math.random()*100) + '%';
+          flake.style.fontSize = (10 + Math.random()*18) + 'px';
+          flake.style.animationDuration = (4000 + Math.random()*5000) + 'ms';
+          document.body.appendChild(flake);
+          setTimeout(()=> flake.remove(), 7000);
+        }, 350);
+      }
+      function stopSnow(){ if(snowInterval){ clearInterval(snowInterval); snowInterval = null; } }
+
+      // Initial messages and gallery state
+      showMessage(0);
+      // Expose next/prev for messages
+
+      // ensure galleryItems is refreshed if images are replaced later
+      function refreshGalleryItems(){
+        galleryItems.length = 0;
+        document.querySelectorAll('.polaroid').forEach(i=>galleryItems.push(i));
+      }
+
+      // small helper: auto clean timers on unload
+      window.addEventListener('beforeunload', ()=>{ stopSlideshow(); stopAutoMsg(); stopSnow(); });
+
+      // Create initial decorations (but only when opened)
+      // Add click on cake area (finale) to show confetti and message
+      const cakeArea = finaleBtn; // reusing finale button
+      cakeArea && cakeArea.addEventListener('click', ()=>{ confettiBurst(120, ['#FFD59A','#FFF6EA','#FFB3C9']); showCakeMessage('Make a wish! 🕯️'); });
+
+      // Build initial elements when app is shown (openBtn handler created these)
+
+      // Also add small accessibility: clicking outside lightbox will close it (already added)
+
     });
   </script>
 </body>
