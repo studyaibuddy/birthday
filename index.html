@@ -25,8 +25,8 @@
     .welcome h1{font-family:'Dancing Script', cursive; font-size:36px;margin:0 0 8px;color:var(--accent)}
     .open-btn{margin-top:14px;padding:12px 20px;border-radius:999px;border:none;background:linear-gradient(135deg,var(--accent),#ffb3c9);color:white;font-weight:700;cursor:pointer;box-shadow:0 12px 36px rgba(255,107,150,0.3)}
     /* Decorations Container */
-    .decorations-container{position:fixed;inset:0;pointer-events:none;z-index:40;display:none}
-    .decorations-container.show{display:flex;align-items:flex-start;justify-content:space-around;padding-top:80px;padding-bottom:20px}
+    .decorations-container{position:fixed;left:0;right:0;top:0;pointer-events:none;z-index:40;display:none;padding-top:20px;padding-bottom:20px}
+    .decorations-container.show{display:flex;align-items:flex-start;justify-content:space-around;gap:20px}
     /* Balloons */
     .balloon{width:50px;height:65px;border-radius:50% 50% 50% 50%;position:relative;cursor:pointer;pointer-events:auto;transition:transform .1s;animation:float 3s ease-in-out infinite}
     .balloon:hover{transform:scale(1.08)}
@@ -79,7 +79,7 @@
     .polaroid img{width:100%;height:160px;object-fit:cover;border-radius:8px}
     figcaption{font-size:13px;color:#7e5f78}
     /* Gift */
-    .gift-wrap{display:flex;flex-direction:column;align-items:center;gap:12px}
+    .gift-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:20px}
     .gift-box{width:150px;height:120px;position:relative;cursor:pointer;transition:transform .2s}
     .gift-box .lid{position:absolute;inset:0 0 60px 0;background:linear-gradient(135deg,#ffdfe9,#ffcce0);border-radius:12px 12px 6px 6px}
     .gift-box .box{position:absolute;left:0;right:0;bottom:0;height:64px;background:linear-gradient(135deg,#fff6f8,#fff1f5);border-radius:6px}
@@ -102,7 +102,7 @@
     /* Confetti pieces (DOM) */
     .confetti-piece{position:fixed;pointer-events:none;border-radius:2px;z-index:10000}
     /* Responsive */
-    @media (max-width:600px){ .hero h2{font-size:24px} .polaroid img{height:130px} .gift-box{width:120px;height:100px} .birthday-banner{padding:20px 30px}.birthday-banner h2{font-size:28px}.decorations-container{gap:10px;padding-top:40px}.cake-message-content{padding:20px;max-width:90%}.btn.gallery{padding:12px 24px;font-size:14px}}
+    @media (max-width:600px){ .hero h2{font-size:24px} .polaroid img{height:130px} .gift-box{width:120px;height:100px} .birthday-banner{padding:20px 30px}.birthday-banner h2{font-size:28px}.decorations-container{gap:10px;padding-top:10px}.cake-message-content{padding:20px;max-width:90%}.btn.gallery{padding:12px 24px;font-size:14px}}
   </style>
 </head>
 <body>
@@ -134,7 +134,7 @@
       <div class="cake-middle"></div>
       <div class="cake-base"></div>
     </div>
-    <div id="balloonsContainer" style="display:flex;gap:15px;flex-wrap:wrap;justify-content:center;align-items:flex-start"></div>
+    <div id="balloonsContainer" style="display:flex;gap:15px;flex-wrap:wrap;justify-content:center;align-items:flex-start;flex:1"></div>
     <div class="cake" data-cake="3">
       <div class="cake-candle"><div class="cake-flame"></div></div>
       <div class="cake-middle"></div>
@@ -314,23 +314,23 @@
       const finaleBtn = document.getElementById('finaleBtn');
       const galleryJump = document.getElementById('galleryJump');
 
-      // Cake messages
+      // Cake messages - Friend-appropriate
       const cakeMessages = {
         1: {
-          title: "Parina's Brilliance ✨",
-          text: "Your intelligence and quick wit never cease to amaze me. You solve problems with such grace and creativity. Happy 15th birthday to the smartest cookie I know!"
+          title: "Your Amazing Humor 😄",
+          text: "You have the funniest jokes and the best laugh! Every moment with you is filled with laughter and joy. Thank you for keeping everyone smiling!"
         },
         2: {
-          title: "Parina's Kindness 💖",
-          text: "The way you care for those around you is truly special. Your compassion and empathy make the world a better place. Thank you for being such a beautiful soul."
+          title: "Your Loyal Friendship 🌟",
+          text: "A friend like you is rare and precious. You're always there when we need you, and you make every hangout unforgettable. So grateful to have you in my life!"
         },
         3: {
-          title: "Parina's Strength 💪",
-          text: "You face challenges with courage and determination. Your resilience inspires everyone around you. Turning 15 and already showing the strength of a true warrior!"
+          title: "Your Creative Spirit 🎨",
+          text: "You see the world in such a unique and beautiful way. Your creativity and imagination inspire everyone around you. Keep being your amazing self!"
         },
         4: {
-          title: "Parina's Joy 🌟",
-          text: "Your laughter is contagious and your smile lights up every room. You bring happiness wherever you go. Here's to 15 years of spreading joy and happiness!"
+          title: "Your Adventurous Soul 🚀",
+          text: "Life is always an adventure with you! You're up for anything and bring excitement to every moment. Here's to 15 years of adventures ahead!"
         }
       };
 
